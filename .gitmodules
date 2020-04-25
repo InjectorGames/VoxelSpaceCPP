@@ -1,0 +1,3 @@
+[submodule "3rdparty/FastNoiseSIMD"]
+	path = 3rdparty/FastNoiseSIMD
+	url = https://github.com/InjectorGames/FastNoiseSIMD
