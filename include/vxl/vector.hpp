@@ -5,6 +5,11 @@
 namespace vxl
 {
 	template<class T, class A = std::allocator<T>>
+	class Vector2;
+	template<class T, class A = std::allocator<T>>
+	class Vector3;
+
+	template<class T, class A = std::allocator<T>>
 	class Vector2
 	{
 	protected:
@@ -21,15 +26,15 @@ namespace vxl
 			if (vector.size() != sizeX * sizeY)
 				throw std::runtime_error("Incorrect vector size");
 		}
-		Vector2(const size_t sizeX, const size_t sizeY, const T fill = T()) :
+		Vector2(const size_t sizeX, const size_t sizeY, const T& value = T()) :
 			m_sizeX(sizeX),
 			m_sizeY(sizeY),
-			m_vector(sizeX * sizeY, fill)
+			m_vector(sizeX * sizeY, value)
 		{}
-		Vector2(const size_t sizeXY, const T fill = T()) :
+		Vector2(const size_t sizeXY, const T& value = T()) :
 			m_sizeX(sizeXY),
 			m_sizeY(sizeXY),
-			m_vector(sizeXY * sizeXY, fill)
+			m_vector(sizeXY * sizeXY, value)
 		{}
 
 		inline size_t size() const noexcept
@@ -51,9 +56,21 @@ namespace vxl
 			m_sizeX = sizeX;
 			m_sizeY = sizeY;
 		}
+		inline void resize(const size_t sizeX, const size_t sizeY, const T& value)
+		{
+			m_vector.resize(sizeX * sizeY, value);
+			m_sizeX = sizeX;
+			m_sizeY = sizeY;
+		}
 		inline void resize(const size_t sizeXY)
 		{
 			m_vector.resize(sizeXY * sizeXY);
+			m_sizeX = sizeXY;
+			m_sizeY = sizeXY;
+		}
+		inline void resize(const size_t sizeXY, const T& value)
+		{
+			m_vector.resize(sizeXY * sizeXY, value);
 			m_sizeX = sizeXY;
 			m_sizeY = sizeXY;
 		}
@@ -134,19 +151,19 @@ namespace vxl
 			if (vector.size() != sizeX * sizeY * sizeZ)
 				throw std::runtime_error("Incorrect vector size");
 		}
-		Vector3(const size_t sizeX, const size_t sizeY, const size_t sizeZ, const T fill = T()) :
+		Vector3(const size_t sizeX, const size_t sizeY, const size_t sizeZ, const T& value = T()) :
 			m_sizeX(sizeX),
 			m_sizeY(sizeY),
 			m_sizeZ(sizeZ),
 			m_sizeXY(sizeX * sizeY),
-			m_vector(sizeX * sizeY * sizeZ, fill)
+			m_vector(sizeX * sizeY * sizeZ, value)
 		{}
-		Vector3(const size_t sizeXYZ, const T fill = T()) :
+		Vector3(const size_t sizeXYZ, const T& value = T()) :
 			m_sizeX(sizeXYZ),
 			m_sizeY(sizeXYZ),
 			m_sizeZ(sizeXYZ),
 			m_sizeXY(sizeXYZ * sizeXYZ),
-			m_vector(sizeXYZ * sizeXYZ * sizeXYZ, fill)
+			m_vector(sizeXYZ * sizeXYZ * sizeXYZ, value)
 		{}
 
 		inline size_t size() const noexcept
@@ -178,9 +195,25 @@ namespace vxl
 			m_sizeZ = sizeZ;
 			m_sizeXY = sizeX * sizeY;
 		}
+		inline void resize(const size_t sizeX, const size_t sizeY, const size_t sizeZ, const T& value)
+		{
+			m_vector.resize(sizeX * sizeY * sizeZ, value);
+			m_sizeX = sizeX;
+			m_sizeY = sizeY;
+			m_sizeZ = sizeZ;
+			m_sizeXY = sizeX * sizeY;
+		}
 		inline void resize(const size_t sizeXYZ)
 		{
 			m_vector.resize(sizeXYZ * sizeXYZ * sizeXYZ);
+			m_sizeX = sizeXYZ;
+			m_sizeY = sizeXYZ;
+			m_sizeZ = sizeXYZ;
+			m_sizeXY = sizeXYZ * sizeXYZ;
+		}
+		inline void resize(const size_t sizeXYZ, const T& value)
+		{
+			m_vector.resize(sizeXYZ * sizeXYZ * sizeXYZ, value);
 			m_sizeX = sizeXYZ;
 			m_sizeY = sizeXYZ;
 			m_sizeZ = sizeXYZ;

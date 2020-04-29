@@ -23,8 +23,8 @@ namespace vxl
 			delete m_fastNoise;
 		}
 
-		template<class V, class M>
-		void generateRandom(Sector<V, M>& sector, const V voxel, const int32_t chance = 50, const uint32_t seed = 1337)
+		template<class TID, class TMD>
+		void generateRandom(Sector<TID, TMD>& sector, const TID id, const int32_t chance = 50, const uint32_t seed = 1337)
 		{
 			if (chance < 0 || chance > 100)
 				throw std::range_error("Chance out of range");
@@ -36,7 +36,7 @@ namespace vxl
 			for (size_t i = 0; i < sector.size(); i++)
 			{
 				if(rand() % modulo < 100)
-					sector.voxelAtUnsafe(i) = voxel;
+					sector.idAtUnsafe(i) = id;
 			}
 		}
 	};
