@@ -18,11 +18,11 @@ namespace vxl
 				sectors.center.size() != sectors.forward.size())
 				throw std::runtime_error("Sector sizes are not equal");
 
-			for (size_t z = 0; z < sectors.center.sizeX(); z++)
+			for (size_t z = 0; z < sectors.center.sizeZ(); z++)
 			{
 				for (size_t y = 0; y < sectors.center.sizeY(); y++)
 				{
-					for (size_t x = 0; x < sectors.center.sizeZ(); x++)
+					for (size_t x = 0; x < sectors.center.sizeX(); x++)
 					{
 						const auto& voxel = voxels.at(sectors.center.idAtUnsafe(x, y, z));
 

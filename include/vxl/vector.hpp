@@ -86,11 +86,15 @@ namespace vxl
 
 		inline T& at(const size_t x, const size_t y)
 		{
-			return m_vector.at(x + y * m_sizeX);
+			if (x >= m_sizeX || y >= m_sizeY)
+				throw std::out_of_range("Out of size range");
+			return m_vector[x + y * m_sizeX];
 		}
 		inline const T& at(const size_t x, const size_t y) const
 		{
-			return m_vector.at(x + y * m_sizeX);
+			if (x >= m_sizeX || y >= m_sizeY)
+				throw std::out_of_range("Out of size range");
+			return m_vector[x + y * m_sizeX];
 		}
 
 		inline T& atUnsafe(const size_t position) noexcept
@@ -231,11 +235,15 @@ namespace vxl
 
 		inline T& at(const size_t x, const size_t y, const size_t z)
 		{
-			return m_vector.at(x + y * m_sizeX + z * m_sizeXY);
+			if (x >= m_sizeX || y >= m_sizeY || z >= m_sizeZ)
+				throw std::out_of_range("Out of size range");
+			return m_vector[x + y * m_sizeX + z * m_sizeXY];
 		}
 		inline const T& at(const size_t x, const size_t y, const size_t z) const
 		{
-			return m_vector.at(x + y * m_sizeX + z * m_sizeXY);
+			if (x >= m_sizeX || y >= m_sizeY || z >= m_sizeZ)
+				throw std::out_of_range("Out of size range");
+			return m_vector[x + y * m_sizeX + z * m_sizeXY];
 		}
 
 		inline T& atUnsafe(const size_t position) noexcept
