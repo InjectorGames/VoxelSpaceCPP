@@ -1,68 +1,57 @@
 #pragma once
-#include <vxl/vector.hpp>
 #include <vxl/sector.hpp>
+#include <vxl/sector_group.hpp>
 
 namespace vxl
 {
 	template<class TID, class TMD>
-	class Structure;
-
-	template<class TID, class TMD>
 	class Structure
 	{
 	protected:
-		Vector3<Sector<TID, TMD>> m_sectors;
+		Array3<Sector<TID, TMD>> sectors;
 	public:
-		Structure(const Vector3<Sector<TID, TMD>>& sectors) :
-			m_sectors(sectors)
+		Structure(const Array3<Sector<TID, TMD>>& _sectors) :
+			sectors(_sectors)
 		{}
-		Structure(const size_t sizeX, const size_t sizeY, const size_t sizeZ, const Sector<TID, TMD>& sector) :
-			m_sectors(sizeX, sizeY, sizeZ, sector)
+		Structure(const size_t sizeX,
+			const size_t sizeY,
+			const size_t sizeZ,
+			const Sector<TID, TMD>& sector) :
+			sectors(sizeX, sizeY, sizeZ, sector)
 		{}
-		Structure(const size_t sizeXYZ, const Sector<TID, TMD>& sector) :
-			m_sectors(sizeXYZ, sector)
+		Structure(const size_t sizeXYZ,
+			const Sector<TID, TMD>& sector) :
+			sectors(sizeXYZ, sector)
 		{}
 
-		inline size_t size() const noexcept
+		inline size_t getSize() const noexcept
 		{
-			return m_sectors.size();
+			return sectors.getSize();
 		}
-		inline size_t sizeX() const noexcept
+		inline size_t getSizeX() const noexcept
 		{
-			return m_sectors.sizeX();
+			return sectors.getSizeX();
 		}
-		inline size_t sizeY() const noexcept
+		inline size_t getSizeY() const noexcept
 		{
-			return m_sectors.sizeY();
+			return sectors.getSizeY();
 		}
-		inline size_t sizeZ() const noexcept
+		inline size_t getSizeZ() const noexcept
 		{
-			return m_sectors.sizeZ();
+			return sectors.getSizeZ();
 		}
-		inline size_t sizeXY() const noexcept
+		inline size_t getSizeXY() const noexcept
 		{
-			return m_sectors.sizeXY();
+			return sectors.getSizeXY();
 		}
-		
-		inline void resize(const size_t sizeX, const size_t sizeY, const size_t sizeZ, const Sector<TID, TMD>& sector)
+		inline const Array3<Sector<TID, TMD>>& getSectors() const noexcept
 		{
-			// TODO: clear structure
-			m_sectors.resize(sizeX, sizeY, sizeZ, sector);
-		}
-		inline void resize(const size_t sizeXYZ, const Sector<TID, TMD>& sector)
-		{
-			// TODO: clear structure
-			m_sectors.resize(sizeXYZ, sector);
+			return sectors;
 		}
 
-		inline const Vector3<Sector<TID, TMD>>& sectors() const noexcept
+		inline void update(const VoxelArray<TID, TMD>& voxels, SectorGroup<TID, TMD>& _sectors, const double& deltaTime)
 		{
-			return m_sectors;
-		}
-
-		inline void update(const VoxelArray<TID, TMD>& voxels, SectorGroup<TID, TMD>& sectors, const double& deltaTime)
-		{
-			for (size_t i = 0; i < m_sectors.size(); i++)
+			for (size_t i = 0; i < sectors.getSize(); i++)
 			{
 				// TODO: if sector loaded update
 			}

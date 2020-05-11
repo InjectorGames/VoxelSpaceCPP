@@ -4,10 +4,7 @@
 namespace vxl
 {
 	template<class TID, class TMD>
-	struct Voxel;
-	template<class TID, class TMD>
 	class VoxelArray;
-
 	template<class TID, class TMD>
 	struct SectorGroup;
 	struct SectorMesh;
@@ -23,7 +20,10 @@ namespace vxl
 		UpdatePFN update;
 		RenderPFN render;
 
-		Voxel(const TID _id, const bool _passable = false, const UpdatePFN _update = nullptr, const RenderPFN _render = nullptr) :
+		Voxel(const TID _id,
+			const bool _passable = false,
+			const UpdatePFN _update = nullptr,
+			const RenderPFN _render = nullptr) :
 			id(_id),
 			passable(_passable),
 			update(_update),
@@ -58,10 +58,21 @@ namespace vxl
 		};
 		inline static void renderBlockSide(SectorMesh& mesh, const size_t x, const size_t y, const size_t z, size_t& vertexIndex, const std::vector<float>& blockVertices)
 		{
-			const float_t vertices[] { blockVertices[0] + x, blockVertices[1] + y, blockVertices[2] + z, blockVertices[3] + x, blockVertices[4] + y, blockVertices[5] + z, blockVertices[6] + x, blockVertices[7] + y, blockVertices[8] + z, blockVertices[9] + x, blockVertices[10] + y, blockVertices[11] + z, };
+			const float_t vertices[]
+			{
+				blockVertices[0] + x, blockVertices[1] + y, blockVertices[2] + z,
+				blockVertices[3] + x, blockVertices[4] + y, blockVertices[5] + z,
+				blockVertices[6] + x, blockVertices[7] + y, blockVertices[8] + z,
+				blockVertices[9] + x, blockVertices[10] + y, blockVertices[11] + z,
+			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
-			const uint32_t indices[] { vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex, vertexIndex + 2, vertexIndex + 3, };
+
+			const uint32_t indices[]
+			{
+				vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex, vertexIndex + 2, vertexIndex + 3,
+			};
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+
 			vertexIndex += 4;
 		}
 		static void renderBlock(const VoxelArray<TID, TMD>& voxels, const  SectorGroup<TID, TMD>& sectors, SectorMesh& mesh, const size_t x, const size_t y, const size_t z)
@@ -136,55 +147,6 @@ namespace vxl
 				if (!voxels.at(sectors.center.idAtUnsafe(x, y, z + 1)).render)
 					renderBlockSide(mesh, x, y, z, vertexIndex, verticesBlockForward);
 			}
-		}
-	};
-
-	template<class TID, class TMD>
-	class VoxelArray
-	{
-	protected:
-		TID m_unknown;
-		std::vector<Voxel<TID, TMD>> m_voxels;
-	public:
-		VoxelArray(const TID unknown, const std::vector<Voxel<TID, TMD>>& voxels) :
-			m_unknown(unknown),
-			m_voxels(voxels)
-		{}
-
-		inline const TID& unknown() const noexcept
-		{
-			return m_unknown;
-		}
-		
-		inline Voxel<TID, TMD>& at(TID id) noexcept
-		{
-			if (static_cast<size_t>(id) < m_voxels.size())
-				return m_voxels[static_cast<size_t>(id)];
-			else
-				return m_voxels[static_cast<size_t>(m_unknown)];
-		}
-		inline const Voxel<TID, TMD>& at(TID id) const noexcept
-		{
-			if (static_cast<size_t>(id) < m_voxels.size())
-				return m_voxels[static_cast<size_t>(id)];
-			else
-				return m_voxels[static_cast<size_t>(m_unknown)];
-		}
-		template<class TV = Voxel<TID, TMD>>
-		inline TV& at(TID id) noexcept
-		{
-			if (static_cast<size_t>(id) < m_voxels.size())
-				return static_cast<TV&>(m_voxels[static_cast<size_t>(id)]);
-			else
-				return static_cast<TV&>(m_voxels[static_cast<size_t>(m_unknown)]);
-		}
-		template<class TV = Voxel<TID, TMD>>
-		inline const TV& at(TID id) const noexcept
-		{
-			if (static_cast<size_t>(id) < m_voxels.size())
-				return static_cast<TV&>(m_voxels[static_cast<size_t>(id)]);
-			else
-				return static_cast<TV&>(m_voxels[static_cast<size_t>(m_unknown)]);
 		}
 	};
 }

@@ -5,7 +5,6 @@
 // https://github.com/Auburns/FastNoise2
 #include <FastNoiseSIMD/FastNoiseSIMD.h>
 
-#include <cstdlib>
 #include <stdexcept>
 
 namespace vxl
@@ -13,14 +12,15 @@ namespace vxl
 	class Generator
 	{
 	protected:
-		FastNoiseSIMD* m_fastNoise;
+		FastNoiseSIMD* fastNoise;
 	public:
-		Generator() :
-			m_fastNoise(FastNoiseSIMD::NewFastNoiseSIMD())
-		{}
+		Generator()
+		{
+			fastNoise = FastNoiseSIMD::NewFastNoiseSIMD();
+		}
 		virtual ~Generator()
 		{
-			delete m_fastNoise;
+			delete fastNoise;
 		}
 
 		template<class TID, class TMD>
@@ -33,7 +33,7 @@ namespace vxl
 
 			const auto modulo = 10000 / chance;
 
-			for (size_t i = 0; i < sector.size(); i++)
+			for (size_t i = 0; i < sector.getSize(); i++)
 			{
 				if(rand() % modulo < 100)
 					sector.idAtUnsafe(i) = id;
