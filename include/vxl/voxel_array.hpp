@@ -1,5 +1,4 @@
 #pragma once
-#include <vxl/vector.hpp>
 #include <vxl/voxel.hpp>
 
 namespace vxl
