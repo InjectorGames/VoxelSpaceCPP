@@ -4,8 +4,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "Prevented in-tree build.")
 endif()
 
-project (vxl
-    VERSION 0.1.0
+project (voxel
+    VERSION 1.0.0
     LANGUAGES CXX
 )
 
@@ -21,16 +21,13 @@ set(FN_COMPILE_AVX2 ON CACHE BOOL "")
 set(FN_COMPILE_AVX512 OFF CACHE BOOL "")
 set(FN_USE_FMA ON CACHE BOOL "")
 set(FN_ALIGNED_SETS ON CACHE BOOL "")
-
 add_subdirectory(3rdparty/FastNoiseSIMD)
 
-add_library(vxl INTERFACE)
-
-target_link_libraries(vxl INTERFACE
+add_library(voxel INTERFACE)
+target_link_libraries(voxel INTERFACE
     FastNoiseSIMD
 )
-
-target_include_directories(vxl INTERFACE
+target_include_directories(voxel INTERFACE
     ${PROJECT_BINARY_DIR}
 	${PROJECT_SOURCE_DIR}/include
 )
