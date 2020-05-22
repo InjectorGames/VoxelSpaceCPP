@@ -1,7 +1,7 @@
 #pragma once
 #include <voxel/defines.hpp>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	class Cluster;
 	class Register;
@@ -12,7 +12,7 @@ namespace voxel
 		virtual void update(
 			const Register& _register,
 			Cluster& cluster,
-			const VOXEL_TIME_T deltaTime,
+			const VOXEL_TIME_TYPE deltaTime,
 			const size_t index) = 0;
 	};
 }

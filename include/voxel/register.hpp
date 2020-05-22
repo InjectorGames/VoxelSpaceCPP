@@ -1,9 +1,8 @@
 #pragma once
 #include <voxel/voxel.hpp>
-
 #include <stdexcept>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	class Register
 	{
@@ -19,7 +18,7 @@ namespace voxel
 				throw std::runtime_error("Incorrect unknown voxel");
 		}
 
-		inline const Voxel& get(const VOXEL_ID_T id) const noexcept
+		inline const Voxel& get(const VOXEL_ID_TYPE id) const noexcept
 		{
 			if (id < voxels.size())
 				return voxels[id];
@@ -27,7 +26,7 @@ namespace voxel
 				return voxels[VOXEL_ID_UNKNOWN];
 		}
 		template<class TV = Voxel>
-		inline const TV& get(const VOXEL_ID_T id) const noexcept
+		inline const TV& get(const VOXEL_ID_TYPE id) const noexcept
 		{
 			if (id < voxels.size())
 				return static_cast<TV&>(voxels[id]);

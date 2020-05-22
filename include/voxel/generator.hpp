@@ -1,15 +1,11 @@
 #pragma once
-#include <voxel/defines.hpp>
-#include <voxel/cluster.hpp>
-#include <voxel/sector.hpp>
+#include <voxel/structure.hpp>
 
 // TODO: switch to FastNoise2
 // https://github.com/Auburns/FastNoise2
 #include <FastNoiseSIMD/FastNoiseSIMD.h>
 
-#include <stdexcept>
-
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	// TODO: make this class abstract as mesh generator
 	class Generator
@@ -17,17 +13,18 @@ namespace voxel
 	protected:
 		FastNoiseSIMD* fastNoise;
 	public:
-		Generator()
+		Generator(int seed = 1337)
 		{
-			fastNoise = FastNoiseSIMD::NewFastNoiseSIMD();
+			fastNoise = FastNoiseSIMD::NewFastNoiseSIMD(seed);
 		}
 		virtual ~Generator()
 		{
 			delete fastNoise;
+			fastNoise = nullptr;
 		}
 
 		inline void generateRandom(Sector& sector,
-			const VOXEL_ID_T id,
+			const VOXEL_ID_TYPE id,
 			const int32_t chance = 50,
 			const uint32_t seed = 1337) const
 		{
@@ -42,6 +39,17 @@ namespace voxel
 			{
 				if(rand() % modulo < 100)
 					sector.setID(i, id);
+			}
+		}
+		inline void generateRandom(Structure& structure,
+			const VOXEL_ID_TYPE id,
+			const int32_t chance = 50,
+			const uint32_t seed = 1337) const
+		{
+			for (size_t i = 0; i < structure.getSize(); i++)
+			{
+				auto& sector = structure.get(i);
+				generateRandom(sector, id, chance, seed);
 			}
 		}
 

@@ -1,6 +1,7 @@
 #pragma once
+#include <voxel/defines.hpp>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	class Terrain
 	{

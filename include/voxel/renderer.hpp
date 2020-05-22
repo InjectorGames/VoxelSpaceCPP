@@ -1,8 +1,7 @@
 #pragma once
-#include <voxel/defines.hpp>
 #include <voxel/mesh.hpp>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	class Cluster;
 	class Register;

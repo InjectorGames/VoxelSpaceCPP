@@ -1,25 +1,25 @@
 #pragma once
 #include <voxel/sector.hpp>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	struct Cluster
 	{
-		const Sector& center;
-		const Sector& left;
-		const Sector& right;
-		const Sector& down;
-		const Sector& up;
-		const Sector& back;
-		const Sector& forward;
+		Sector& center;
+		Sector& left;
+		Sector& right;
+		Sector& down;
+		Sector& up;
+		Sector& back;
+		Sector& forward;
 
-		Cluster(const Sector& _center,
-			const Sector& _left,
-			const Sector& _right,
-			const Sector& _down,
-			const Sector& _up,
-			const Sector& _back,
-			const Sector& _forward) :
+		Cluster(Sector& _center,
+			Sector& _left,
+			Sector& _right,
+			Sector& _down,
+			Sector& _up,
+			Sector& _back,
+			Sector& _forward) :
 			center(_center),
 			left(_left),
 			right(_right),

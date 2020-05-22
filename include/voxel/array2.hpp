@@ -1,7 +1,8 @@
 #pragma once
+#include <voxel/defines.hpp>
 #include <stdexcept>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	template<class T>
 	class Array2
@@ -19,7 +20,15 @@ namespace voxel
 			sizeY(_sizeY)
 		{
 			data = new T[size];
-			std::fill_n(data, size, value);
+			std::uninitialized_fill_n(data, size, value);
+		}
+		Array2(const Array2& array) :
+			size(array.size),
+			sizeX(array.sizeX),
+			sizeY(array.sizeY)
+		{
+			data = new T[size];
+			std::uninitialized_copy_n(array.data, size, data);
 		}
 		virtual ~Array2()
 		{
@@ -40,6 +49,11 @@ namespace voxel
 			return sizeY;
 		}
 
+		inline const T* getData() const noexcept
+		{
+			return data;
+		}
+
 		inline T& getSafe(const size_t index)
 		{
 			if (index >= size)
@@ -56,7 +70,7 @@ namespace voxel
 		{
 			if (index >= size)
 				throw std::out_of_range("Out of size range");
-			data[index] = value;
+			data[index] = T(value);
 		}
 
 		inline T& getSafe(const size_t x, const size_t y)
@@ -75,7 +89,7 @@ namespace voxel
 		{
 			if (x >= sizeX || y >= sizeY)
 				throw std::out_of_range("Out of size range");
-			data[x + y * sizeX] = value;
+			data[x + y * sizeX] = T(value);
 		}
 
 		inline T& get(const size_t index) noexcept
@@ -88,7 +102,7 @@ namespace voxel
 		}
 		inline void set(const size_t index, const T& value) noexcept
 		{
-			data[index] = value;
+			data[index] = T(value);
 		}
 
 		inline T& get(const size_t x, const size_t y) noexcept
@@ -101,12 +115,12 @@ namespace voxel
 		}
 		inline void set(const size_t x, const size_t y, const T& value) noexcept
 		{
-			data[x + y * sizeX] = value;
+			data[x + y * sizeX] = T(value);
 		}
 
-		inline const T* getData() const noexcept
+		inline void fill(const T& value = T()) noexcept
 		{
-			return data;
+			std::uninitialized_fill_n(data, size, value);
 		}
 	};
 }

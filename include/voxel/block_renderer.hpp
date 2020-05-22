@@ -1,47 +1,47 @@
 #pragma once
 #include <voxel/renderer.hpp>
 
-namespace voxel
+namespace VOXEL_NAMESPACE
 {
 	class BlockRenderer : public Renderer
 	{
 	protected:
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> leftBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> leftBlockVertices
 		{
 			0.0f, 0.0f, 1.0f,
 			0.0f, 1.0f, 1.0f,
 			0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> rightBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> rightBlockVertices
 		{
 			1.0f, 0.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 1.0f,
 			0.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> downBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> downBlockVertices
 		{
 			0.0f, 0.0f, 1.0f,
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 1.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> upBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> upBlockVertices
 		{
 			0.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 1.0f,
 			1.0f, 1.0f, 1.0f,
 			1.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> backBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> backBlockVertices
 		{
 			0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_T> forwardBlockVertices
+		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> forwardBlockVertices
 		{
 			1.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 1.0f,
@@ -53,9 +53,9 @@ namespace voxel
 
 		inline static void renderBlockSide(Mesh& mesh, size_t& vertexIndex,
 			const size_t x, const size_t y, const size_t z,
-			const std::vector<VOXEL_MESH_VERTEX_T>& blockVertices)
+			const std::vector<VOXEL_MESH_VERTEX_TYPE>& blockVertices)
 		{
-			const VOXEL_MESH_VERTEX_T vertices[]
+			const VOXEL_MESH_VERTEX_TYPE vertices[]
 			{
 				x + blockVertices[0], y + blockVertices[1], z + blockVertices[2],
 				x + blockVertices[3], y + blockVertices[4], z + blockVertices[5],
@@ -64,7 +64,7 @@ namespace voxel
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
 
-			const VOXEL_MESH_INDEX_T indices[]
+			const VOXEL_MESH_INDEX_TYPE indices[]
 			{
 				vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex, vertexIndex + 2, vertexIndex + 3,
 			};
