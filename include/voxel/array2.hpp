@@ -1,5 +1,4 @@
 #pragma once
-#include <voxel/defines.hpp>
 #include <stdexcept>
 
 namespace VOXEL_NAMESPACE
@@ -77,19 +76,19 @@ namespace VOXEL_NAMESPACE
 		{
 			if (x >= sizeX || y >= sizeY)
 				throw std::out_of_range("Out of size range");
-			return data[x + y * sizeX];
+			return data[x + sizeX * y];
 		}
 		inline const T& getSafe(const size_t x, const size_t y) const
 		{
 			if (x >= sizeX || y >= sizeY)
 				throw std::out_of_range("Out of size range");
-			return data[x + y * sizeX];
+			return data[x + sizeX * y];
 		}
 		inline void setSafe(const size_t x, const size_t y, const T& value)
 		{
 			if (x >= sizeX || y >= sizeY)
 				throw std::out_of_range("Out of size range");
-			data[x + y * sizeX] = T(value);
+			data[x + sizeX * y] = T(value);
 		}
 
 		inline T& get(const size_t index) noexcept
@@ -107,20 +106,32 @@ namespace VOXEL_NAMESPACE
 
 		inline T& get(const size_t x, const size_t y) noexcept
 		{
-			return data[x + y * sizeX];
+			return data[x + sizeX * y];
 		}
 		inline const T& get(const size_t x, const size_t y) const noexcept
 		{
-			return data[x + y * sizeX];
+			return data[x + sizeX * y];
 		}
 		inline void set(const size_t x, const size_t y, const T& value) noexcept
 		{
-			data[x + y * sizeX] = T(value);
+			data[x + sizeX * y] = T(value);
 		}
 
 		inline void fill(const T& value = T()) noexcept
 		{
 			std::uninitialized_fill_n(data, size, value);
+		}
+
+		inline const size_t positionToIndex(
+			const size_t x, const size_t y) const noexcept
+		{
+			return x + sizeX * y;
+		}
+		inline void indexToPosition(
+			const size_t index, size_t& x, size_t& y) const noexcept
+		{
+			y = index / sizeX;
+			x = index - y * sizeX;
 		}
 	};
 }

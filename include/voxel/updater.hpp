@@ -9,10 +9,7 @@ namespace VOXEL_NAMESPACE
 	class Updater
 	{
 	public:
-		virtual void update(
-			const Register& _register,
-			Cluster& cluster,
-			const VOXEL_TIME_TYPE deltaTime,
-			const size_t index) = 0;
+		virtual void update(const Register& _register,
+			const time_t deltaTime, const size_t index, Cluster& cluster) = 0;
 	};
 }

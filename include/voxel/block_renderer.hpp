@@ -6,42 +6,42 @@ namespace VOXEL_NAMESPACE
 	class BlockRenderer : public Renderer
 	{
 	protected:
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> leftBlockVertices
+		inline static const std::vector<mesh_vert_t> leftBlockVertices
 		{
 			0.0f, 0.0f, 1.0f,
 			0.0f, 1.0f, 1.0f,
 			0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> rightBlockVertices
+		inline static const std::vector<mesh_vert_t> rightBlockVertices
 		{
 			1.0f, 0.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 1.0f,
 			0.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> downBlockVertices
+		inline static const std::vector<mesh_vert_t> downBlockVertices
 		{
 			0.0f, 0.0f, 1.0f,
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 1.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> upBlockVertices
+		inline static const std::vector<mesh_vert_t> upBlockVertices
 		{
 			0.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 1.0f,
 			1.0f, 1.0f, 1.0f,
 			1.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> backBlockVertices
+		inline static const std::vector<mesh_vert_t> backBlockVertices
 		{
 			0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 		};
-		inline static const std::vector<VOXEL_MESH_VERTEX_TYPE> forwardBlockVertices
+		inline static const std::vector<mesh_vert_t> forwardBlockVertices
 		{
 			1.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 1.0f,
@@ -53,9 +53,9 @@ namespace VOXEL_NAMESPACE
 
 		inline static void renderBlockSide(Mesh& mesh, size_t& vertexIndex,
 			const size_t x, const size_t y, const size_t z,
-			const std::vector<VOXEL_MESH_VERTEX_TYPE>& blockVertices)
+			const std::vector<mesh_vert_t>& blockVertices)
 		{
-			const VOXEL_MESH_VERTEX_TYPE vertices[]
+			const mesh_vert_t vertices[]
 			{
 				x + blockVertices[0], y + blockVertices[1], z + blockVertices[2],
 				x + blockVertices[3], y + blockVertices[4], z + blockVertices[5],
@@ -64,7 +64,7 @@ namespace VOXEL_NAMESPACE
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
 
-			const VOXEL_MESH_INDEX_TYPE indices[]
+			const mesh_ind_t indices[]
 			{
 				vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex, vertexIndex + 2, vertexIndex + 3,
 			};
@@ -73,78 +73,77 @@ namespace VOXEL_NAMESPACE
 			vertexIndex += 4;
 		}
 	public:
-		void generate(Mesh& mesh,
-			const Register& _register, const Cluster& cluster,
-			const size_t x, const size_t y, const size_t z) override
+		void generate(const Register& _register, const Cluster& cluster,
+			const Vec3<size_t>& position, Mesh& mesh) override
 		{
 			auto vertexIndex = mesh.vertices.size() / 3;
 
 			// TODO: check if renderer is BlockRederer type
 
-			if (x == VOXEL_DIRECTION_ZERO)
+			if (position.x == 0)
 			{
-				if (!_register.get(cluster.left.getID(VOXEL_SECTOR_SAFE_LENGTH, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, leftBlockVertices);
-				if (!_register.get(cluster.center.getID(x + VOXEL_DIRECTION_RIGHT, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, rightBlockVertices);
+				if (!_register.get(cluster.left.ids.get(sectorSafeLength, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x + rightDir, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
-			else if (x == VOXEL_SECTOR_SAFE_LENGTH)
+			else if (position.x == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.getID(x + VOXEL_DIRECTION_LEFT, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, leftBlockVertices);
-				if (!_register.get(cluster.right.getID(VOXEL_DIRECTION_ZERO, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, rightBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x + leftDir, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				if (!_register.get(cluster.right.ids.get(zeroDir, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.getID(x + VOXEL_DIRECTION_LEFT, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, leftBlockVertices);
-				if (!_register.get(cluster.center.getID(x + VOXEL_DIRECTION_RIGHT, y, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, rightBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x + leftDir, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x + rightDir, position.y, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
 
-			if (y == VOXEL_DIRECTION_ZERO)
+			if (position.y == 0)
 			{
-				if (!_register.get(cluster.down.getID(x, VOXEL_SECTOR_SAFE_LENGTH, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, downBlockVertices);
-				if (!_register.get(cluster.center.getID(x, y + VOXEL_DIRECTION_UP, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, upBlockVertices);
+				if (!_register.get(cluster.down.ids.get(position.x, sectorSafeLength, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y + upDir, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
-			else if (y == VOXEL_SECTOR_SAFE_LENGTH)
+			else if (position.y == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.getID(x, y + VOXEL_DIRECTION_DOWN, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, downBlockVertices);
-				if (!_register.get(cluster.up.getID(x, VOXEL_DIRECTION_ZERO, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, upBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y + downDir, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				if (!_register.get(cluster.up.ids.get(position.x, zeroDir, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.getID(x, y + VOXEL_DIRECTION_DOWN, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, downBlockVertices);
-				if (!_register.get(cluster.center.getID(x, y + VOXEL_DIRECTION_UP, z)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, upBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y + downDir, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y + upDir, position.z)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
 
-			if (z == VOXEL_DIRECTION_ZERO)
+			if (position.z == 0)
 			{
-				if (!_register.get(cluster.back.getID(x, y, VOXEL_SECTOR_SAFE_LENGTH)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, backBlockVertices);
-				if (!_register.get(cluster.center.getID(x, y, z + VOXEL_DIRECTION_FORWARD)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, forwardBlockVertices);
+				if (!_register.get(cluster.back.ids.get(position.x, position.y, sectorSafeLength)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + forwardDir)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
-			else if (z == VOXEL_SECTOR_SAFE_LENGTH)
+			else if (position.z == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.getID(x, y, z + VOXEL_DIRECTION_BACK)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, backBlockVertices);
-				if (!_register.get(cluster.forward.getID(x, y, VOXEL_DIRECTION_ZERO)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, forwardBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + backDir)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				if (!_register.get(cluster.forward.ids.get(position.x, position.y, zeroDir)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.getID(x, y, z + VOXEL_DIRECTION_BACK)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, backBlockVertices);
-				if (!_register.get(cluster.center.getID(x, y, z + VOXEL_DIRECTION_FORWARD)).renderer)
-					renderBlockSide(mesh, vertexIndex, x, y, z, forwardBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + backDir)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + forwardDir)).renderer)
+					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
 		}
 	};

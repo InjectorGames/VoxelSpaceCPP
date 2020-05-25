@@ -1,5 +1,5 @@
 #pragma once
-#include <voxel/defines.hpp>
+#include <voxel/vec3.hpp>
 #include <stdexcept>
 
 namespace VOXEL_NAMESPACE
@@ -8,35 +8,34 @@ namespace VOXEL_NAMESPACE
 	class Array3
 	{
 	protected:
-		size_t size;
-		size_t sizeX;
-		size_t sizeY;
-		size_t sizeZ;
-		size_t sizeXY;
+		size_t count;
+		Vec3<size_t> size;
 		T* data;
 	public:
+		Array3(const Vec3<size_t>& _size,
+			const T& value = T()) :
+			count(_size.x* _size.y* _size.z),
+			size(_size)
+		{
+			data = new T[count];
+			std::uninitialized_fill_n(data, count, value);
+		}
 		Array3(const size_t _sizeX,
 			const size_t _sizeY,
 			const size_t _sizeZ,
 			const T& value = T()) :
-			size(_sizeX * _sizeY * _sizeZ),
-			sizeX(_sizeX),
-			sizeY(_sizeY),
-			sizeZ(_sizeZ),
-			sizeXY(_sizeX * _sizeY)
+			count(_sizeX * _sizeY * _sizeZ),
+			size(_sizeX, _sizeY, _sizeZ)
 		{
-			data = new T[size];
-			std::uninitialized_fill_n(data, size, value);
+			data = new T[count];
+			std::uninitialized_fill_n(data, count, value);
 		}
-		Array3(const Array3& array) :
-			size(array.size),
-			sizeX(array.sizeX),
-			sizeY(array.sizeY),
-			sizeZ(array.sizeZ),
-			sizeXY(array.sizeXY)
+		Array3(const Array3<T>& array) :
+			count(array.count),
+			size(array.size)
 		{
-			data = new T[size];
-			std::uninitialized_copy_n(array.data, size, data);
+			data = new T[count];
+			std::uninitialized_copy_n(array.data, count, data);
 		}
 		virtual ~Array3()
 		{
@@ -44,27 +43,32 @@ namespace VOXEL_NAMESPACE
 			data = nullptr;
 		}
 
-		inline const size_t getSize() const noexcept
+		inline const size_t getCount() const noexcept
+		{
+			return count;
+		}
+
+		inline const Vec3<size_t>& getSize() const noexcept
 		{
 			return size;
 		}
 		inline const size_t getSizeX() const noexcept
 		{
-			return sizeX;
+			return size.x;
 		}
 		inline const size_t getSizeY() const noexcept
 		{
-			return sizeY;
+			return size.y;
 		}
 		inline const size_t getSizeZ() const noexcept
 		{
-			return sizeZ;
-		}
-		inline const size_t getSizeXY() const noexcept
-		{
-			return sizeXY;
+			return size.z;
 		}
 
+		inline T* getData() noexcept
+		{
+			return data;
+		}
 		inline const T* getData() const noexcept
 		{
 			return data;
@@ -89,24 +93,45 @@ namespace VOXEL_NAMESPACE
 			data[index] = T(value);
 		}
 
+		inline T& getSafe(const Vec3<size_t>& position)
+		{
+			if (position.x >= size.x || position.y >= size.y || position.z >= size.z)
+				throw std::out_of_range("Out of size range");
+			return data[position.x + size.x * (position.y + size.y * position.z)];
+		}
 		inline T& getSafe(const size_t x, const size_t y, const size_t z)
 		{
-			if (x >= sizeX || y >= sizeY || z >= sizeZ)
+			if (x >= size.x || y >= size.y || z >= size.z)
 				throw std::out_of_range("Out of size range");
-			return data[x + y * sizeX + z * sizeXY];
+			return data[x + size.x * (y + size.y * z)];
+		}
+		
+		inline const T& getSafe(const Vec3<size_t>& position) const
+		{
+			if (position.x >= size.x || position.y >= size.y || position.z >= size.z)
+				throw std::out_of_range("Out of size range");
+			return data[position.x + size.x * (position.y + size.y * position.z)];
 		}
 		inline const T& getSafe(const size_t x, const size_t y, const size_t z) const
 		{
-			if (x >= sizeX || y >= sizeY || z >= sizeZ)
+			if (x >= size.x || y >= size.y || z >= size.z)
 				throw std::out_of_range("Out of size range");
-			return data[x + y * sizeX + z * sizeXY];
+			return data[x + size.x * (y + size.y * z)];
+		}
+		
+		inline void setSafe(const Vec3<size_t>& position, const T& value)
+		{
+			if (position.x >= sizeX || position.y >= sizeY || position.z >= sizeZ)
+				throw std::out_of_range("Out of size range");
+			data[position.x + sizeX * (position.y + sizeY * position.z)] = T(value);
 		}
 		inline void setSafe(const size_t x, const size_t y, const size_t z, const T& value)
 		{
-			if (x >= sizeX || y >= sizeY || z >= sizeZ)
+			if (x >= size.x || y >= size.y || z >= size.z)
 				throw std::out_of_range("Out of size range");
-			data[x + y * sizeX + z * sizeXY] = T(value);
+			data[x + size.x * (y + size.y * z)] = T(value);
 		}
+		
 
 		inline T& get(const size_t index) noexcept
 		{
@@ -121,22 +146,110 @@ namespace VOXEL_NAMESPACE
 			data[index] = T(value);
 		}
 
+		inline T& get(const Vec3<size_t>& position) noexcept
+		{
+			return data[position.x + size.x * (position.y + size.y * position.z)];
+		}
 		inline T& get(const size_t x, const size_t y, const size_t z) noexcept
 		{
-			return data[x + y * sizeX + z * sizeXY];
+			return data[x + size.x * (y + size.y * z)];
+		}
+
+		inline const T& get(const Vec3<size_t>& position) const noexcept
+		{
+			return data[position.x + size.x * (position.y + size.y * position.z)];
 		}
 		inline const T& get(const size_t x, const size_t y, const size_t z) const noexcept
 		{
-			return data[x + y * sizeX + z * sizeXY];
+			return data[x + size.x * (y + size.y * z)];
+		}
+
+		inline void set(const Vec3<size_t>& position, const T& value) noexcept
+		{
+			data[position.x + size.x * (position.y + size.y * position.z)] = T(value);
 		}
 		inline void set(const size_t x, const size_t y, const size_t z, const T& value) noexcept
 		{
-			data[x + y * sizeX + z * sizeXY] = T(value);
+			data[x + size.x * (y + size.y * z)] = T(value);
 		}
 
 		inline void fill(const T& value = T()) noexcept
 		{
 			std::uninitialized_fill_n(data, size, value);
+		}
+
+		inline const size_t positionToIndex(const Vec3<size_t>& position) const noexcept
+		{
+			return position.x + size.x * (position.y + size.y * position.z);
+		}
+		inline const size_t positionToIndex(
+			const size_t x, const size_t y, const size_t z) const noexcept
+		{
+			return x + size.x * (y + size.y * z);
+		}
+
+		inline const size_t positionToIndexSafe(const Vec3<size_t>& position) const
+		{
+			if (position.x >= size.x || position.y >= size.y || position.z >= size.z)
+				throw std::out_of_range("Out of size range");
+			return position.x + size.x * (position.y + size.y * position.z);
+		}
+		inline const size_t positionToIndexSafe(
+			const size_t x, const size_t y, const size_t z) const
+		{
+			if (x >= size.x || y >= size.y || z >= size.z)
+				throw std::out_of_range("Out of size range");
+			return x + size.x * (y + size.y * z);
+		}
+
+		inline const bool positionToIndexNoex(const Vec3<size_t>& position,
+			size_t& index) const noexcept
+		{
+			if (position.x >= size.x || position.y >= size.y || position.z >= size.z)
+				return false;
+			index = position.x + size.x * (position.y + size.y * position.z);
+			return true;
+		}
+		inline const bool positionToIndexNoex(
+			const size_t x, const size_t y, const size_t z,
+			size_t& index) const noexcept
+		{
+			if (x >= size.x || y >= size.y || z >= size.z)
+				return false;
+			index = x + size.x * (y + size.y * z);
+			return true;
+		}
+
+		inline const Vec3<size_t> indexToPosition(size_t index) const noexcept
+		{
+			Vec3<size_t> position;
+			position.z = index / (size.x * size.y);
+			index -= position.z * (size.x * size.y);
+			position.y = index / size.x;
+			position.x = index - position.y * size.x;
+			return position;
+		}
+		inline const Vec3<size_t> indexToPositionSafe(size_t index) const
+		{
+			if (index >= size)
+				throw std::out_of_range("Out of size range");
+			Vec3<size_t> position;
+			position.z = index / (size.x * size.y);
+			index -= position.z * (size.x * size.y);
+			position.y = index / size.x;
+			position.x = index - position.y * size.x;
+			return position;
+		}
+		inline const bool indexToPositionNoex(size_t index,
+			Vec3<size_t>& position) const noexcept
+		{
+			if (index >= size)
+				return false;
+			position.z = index / (size.x * size.y);
+			index -= position.z * (size.x * size.y);
+			position.y = index / size.x;
+			position.x = index - position.y * size.x;
+			return true;
 		}
 	};
 }
