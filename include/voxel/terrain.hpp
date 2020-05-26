@@ -2,90 +2,71 @@
 #include <voxel/cluster.hpp>
 #include <voxel/sector.hpp>
 
-#include <vector>
-#include <chrono>
+#include <map>
 
 namespace VOXEL_NAMESPACE
 {
+	template<class T = Sector>
 	class Terrain
 	{
 	protected:
-		size_t updateIndex;
+		std::map<Vec3<size_t>, T> sectors;
 
-		size_t count;
-		std::vector<Sector> sectors;
-		std::vector<Vec3<size_t>> positions;
-
-		inline const bool updateSector(const Register& _register, const time_t deltaTime,
-			const Vec3<size_t>& position, Sector& sector)
+		inline const bool updateSector(const Registry& registry, const time_t deltaTime,
+			const Vec3<size_t>& position, T& sector)
 		{
-			size_t leftIndex;
-			size_t rightIndex;
-			size_t downIndex;
-			size_t upIndex;
-			size_t backIndex;
-			size_t forwardIndex;
-
-			positions.
-
-			if (positionToIndexNoex(position.x + leftDir, position.y, position.z, leftIndex) &&
-				positionToIndexNoex(position.x + rightDir, position.y, position.z, rightIndex) &&
-				positionToIndexNoex(position.x, position.y + downDir, position.z, downIndex) &&
-				positionToIndexNoex(position.x, position.y + upDir, position.z, upIndex) &&
-				positionToIndexNoex(position.x, position.y, position.z + backDir, backIndex) &&
-				positionToIndexNoex(position.x, position.y, position.z + forwardDir, forwardIndex))
-			{
-				auto cluster = Cluster(sector,
-					data[leftIndex],
-					data[rightIndex],
-					data[downIndex],
-					data[upIndex],
-					data[backIndex],
-					data[forwardIndex]);
-				sector.update(_register, cluster, deltaTime);
-				return true;
-			}
-			else
-			{
+			auto leftIterator = sectors.find(Vec3<size_t>(
+				position.x + leftDir, position.y, position.z));
+			if (leftIterator == sectors.end())
 				return false;
-			}
+
+			auto rightIterator = sectors.find(Vec3<size_t>(
+				position.x + rightDir, position.y, position.z));
+			if (rightIterator == sectors.end())
+				return false;
+
+			auto downIterator = sectors.find(Vec3<size_t>(
+				position.x, position.y + downDir, position.z));
+			if (downIterator == sectors.end())
+				return false;
+
+			auto upIterator = sectors.find(Vec3<size_t>(
+				position.x, position.y + upDir, position.z));
+			if (upIterator == sectors.end())
+				return false;
+
+			auto backIterator = sectors.find(Vec3<size_t>(
+				position.x, position.y, position.z + backDir));
+			if (backIterator == sectors.end())
+				return false;
+
+			auto forwardIterator = sectors.find(Vec3<size_t>(
+				position.x, position.y, position.z + forwardDir));
+			if (forwardIterator == sectors.end())
+				return false;
+
+			auto cluster = Cluster(sector,
+				leftIterator->second,
+				rightIterator->second,
+				downIterator->second,
+				upIterator->second,
+				backIterator->second,
+				forwardIterator->second);
+			sector.update(registry, cluster, deltaTime);
+			return true;
 		}
 	public:
-		time_t maxUpdateTime;
-
-		Terrain(const std::vector<Sector>& _sectors = {},
-			const std::vector<Vec3<size_t>>& _positions = {},
-			const time_t _maxUpdateTime = INFINITY) :
-			updateIndex(0),
-			count(0),
-			sectors(_sectors),
-			positions(_positions),
-			maxUpdateTime(_maxUpdateTime)
+		Terrain(const std::map<Vec3<size_t>, T>& _sectors = {}) :
+			sectors(_sectors)
 		{}
 		virtual ~Terrain()
 		{}
 
-		virtual void update(const Register& _register,
+		virtual void update(const Registry& registry,
 			const time_t deltaTime)
 		{
-			const auto startTime = std::chrono::steady_clock::now();
-
-			while (updateIndex < count)
-			{
-				const auto currentTime = std::chrono::steady_clock::now();
-				const auto duration = std::chrono::duration_cast<
-					std::chrono::duration<time_t>>(currentTime - startTime);
-
-				if (duration.count() >= maxUpdateTime)
-					return;
-
-				const auto position = indexToPosition(updateIndex);
-				auto& sector = data[updateIndex];
-				updateSector(_register, deltaTime, position, sector);
-				updateIndex++;
-			}
-
-			updateIndex = 0;
+			for (auto& pair : sectors)
+				updateSector(registry, deltaTime, pair.first, pair.second);
 		}
 	};
 }

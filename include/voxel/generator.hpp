@@ -23,7 +23,7 @@ namespace VOXEL_NAMESPACE
 			fastNoise = nullptr;
 		}
 
-		inline void generateRandom(Sector& sector,
+		inline void generateRandom(Array3<id_t>& ids,
 			const id_t id,
 			const int32_t chance = 50,
 			const uint32_t seed = 1337) const
@@ -38,23 +38,12 @@ namespace VOXEL_NAMESPACE
 			for (size_t i = 0; i < sectorSize; i++)
 			{
 				if(rand() % modulo < 100)
-					sector.ids.set(i, id);
-			}
-		}
-		inline void generateRandom(Structure& structure,
-			const id_t id,
-			const int32_t chance = 50,
-			const uint32_t seed = 1337) const
-		{
-			for (size_t i = 0; i < structure.getCount(); i++)
-			{
-				auto& sector = structure.get(i);
-				generateRandom(sector, id, chance, seed);
+					ids.set(i, id);
 			}
 		}
 
 		inline void generateMesh(Mesh& mesh,
-			const Register& _register,
+			const Registry& registry,
 			const Cluster& cluster)
 		{
 			for (size_t z = 0; z < sectorLength; z++)
@@ -64,11 +53,11 @@ namespace VOXEL_NAMESPACE
 					for (size_t x = 0; x < sectorLength; x++)
 					{
 						const auto position = Vec3<size_t>(x, y, z);
-						const auto id = cluster.center.ids.get(position);
-						const auto& voxel = _register.get(id);
+						const auto id = cluster.center.getIDS().get(position);
+						const auto& voxel = registry.get(id);
 
 						if (voxel.renderer)
-							voxel.renderer->generate(_register, cluster, position, mesh);
+							voxel.renderer->generate(registry, cluster, position, mesh);
 					}
 				}
 			}

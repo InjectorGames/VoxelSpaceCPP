@@ -1,4 +1,5 @@
 #pragma once
+#include <voxel/vec2.hpp>
 #include <stdexcept>
 
 namespace VOXEL_NAMESPACE
@@ -7,27 +8,33 @@ namespace VOXEL_NAMESPACE
 	class Array2
 	{
 	protected:
-		size_t size;
-		size_t sizeX;
-		size_t sizeY;
+		size_t count;
+		Vec2<size_t> size;
 		T* data;
 	public:
+		Array2(const Vec2<size_t>& _size,
+			const T& value = T()) :
+			count(_size.x * _size.y),
+			size(_size)
+		{
+			data = new T[count];
+			std::uninitialized_fill_n(data, count, value);
+		}
 		Array2(const size_t _sizeX,
 			const size_t _sizeY,
 			const T& value = T()) :
-			sizeX(_sizeX),
-			sizeY(_sizeY)
+			count(_sizeX * _sizeY),
+			size(_sizeX, _sizeY)
 		{
-			data = new T[size];
-			std::uninitialized_fill_n(data, size, value);
+			data = new T[count];
+			std::uninitialized_fill_n(data, count, value);
 		}
 		Array2(const Array2& array) :
-			size(array.size),
-			sizeX(array.sizeX),
-			sizeY(array.sizeY)
+			count(array.count),
+			size(array.size)
 		{
-			data = new T[size];
-			std::uninitialized_copy_n(array.data, size, data);
+			data = new T[count];
+			std::uninitialized_copy_n(array.data, count, data);
 		}
 		virtual ~Array2()
 		{
@@ -35,19 +42,28 @@ namespace VOXEL_NAMESPACE
 			data = nullptr;
 		}
 
-		inline const size_t getSize() const noexcept
+		inline const size_t getCount() const noexcept
+		{
+			return count;
+		}
+
+		inline const Vec2<size_t>& getSize() const noexcept
 		{
 			return size;
 		}
 		inline const size_t getSizeX() const noexcept
 		{
-			return sizeX;
+			return size.x;
 		}
 		inline const size_t getSizeY() const noexcept
 		{
-			return sizeY;
+			return size.y;
 		}
 
+		inline T* getData() noexcept
+		{
+			return data;
+		}
 		inline const T* getData() const noexcept
 		{
 			return data;

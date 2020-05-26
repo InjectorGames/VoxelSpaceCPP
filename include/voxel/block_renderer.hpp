@@ -73,7 +73,7 @@ namespace VOXEL_NAMESPACE
 			vertexIndex += 4;
 		}
 	public:
-		void generate(const Register& _register, const Cluster& cluster,
+		void generate(const Registry& registry, const Cluster& cluster,
 			const Vec3<size_t>& position, Mesh& mesh) override
 		{
 			auto vertexIndex = mesh.vertices.size() / 3;
@@ -82,67 +82,67 @@ namespace VOXEL_NAMESPACE
 
 			if (position.x == 0)
 			{
-				if (!_register.get(cluster.left.ids.get(sectorSafeLength, position.y, position.z)).renderer)
+				if (!registry.get(cluster.left.getIDS().get(sectorSafeLength, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x + rightDir, position.y, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
 			else if (position.x == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.ids.get(position.x + leftDir, position.y, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
-				if (!_register.get(cluster.right.ids.get(zeroDir, position.y, position.z)).renderer)
+				if (!registry.get(cluster.right.getIDS().get(zeroDir, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.ids.get(position.x + leftDir, position.y, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x + rightDir, position.y, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
 			}
 
 			if (position.y == 0)
 			{
-				if (!_register.get(cluster.down.ids.get(position.x, sectorSafeLength, position.z)).renderer)
+				if (!registry.get(cluster.down.getIDS().get(position.x, sectorSafeLength, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x, position.y + upDir, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + upDir, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
 			else if (position.y == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.ids.get(position.x, position.y + downDir, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + downDir, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
-				if (!_register.get(cluster.up.ids.get(position.x, zeroDir, position.z)).renderer)
+				if (!registry.get(cluster.up.getIDS().get(position.x, zeroDir, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.ids.get(position.x, position.y + downDir, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + downDir, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x, position.y + upDir, position.z)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + upDir, position.z)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
 			}
 
 			if (position.z == 0)
 			{
-				if (!_register.get(cluster.back.ids.get(position.x, position.y, sectorSafeLength)).renderer)
+				if (!registry.get(cluster.back.getIDS().get(position.x, position.y, sectorSafeLength)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + forwardDir)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
 			else if (position.z == sectorSafeLength)
 			{
-				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + backDir)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + backDir)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
-				if (!_register.get(cluster.forward.ids.get(position.x, position.y, zeroDir)).renderer)
+				if (!registry.get(cluster.forward.getIDS().get(position.x, position.y, zeroDir)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
 			else
 			{
-				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + backDir)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + backDir)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
-				if (!_register.get(cluster.center.ids.get(position.x, position.y, position.z + forwardDir)).renderer)
+				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
 					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
 			}
 		}

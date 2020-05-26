@@ -4,13 +4,13 @@
 
 namespace VOXEL_NAMESPACE
 {
-	class Cluster;
-	class Register;
+	struct Cluster;
+	class Registry;
 
 	class Renderer
 	{
 	public:
-		virtual void generate(const Register& _register, const Cluster& cluster,
+		virtual void generate(const Registry& registry, const Cluster& cluster,
 			 const Vec3<size_t>& position, Mesh& mesh) = 0;
 	};
 }

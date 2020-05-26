@@ -1,35 +1,56 @@
 #pragma once
 #include <voxel/array3.hpp>
-#include <voxel/register.hpp>
+#include <voxel/registry.hpp>
 
 namespace VOXEL_NAMESPACE
 {
-	class Cluster;
+	struct Cluster;
 
 	class Sector
 	{
-	public:
+	protected:
 		Array3<id_t> ids;
 		Array3<md_t> mds;
+	public:
 
-		Sector(const id_t id = nullVoxelID,
+		Sector(const Vec3<size_t> size =
+			Vec3<size_t>(sectorLength, sectorLength, sectorLength),
+			const id_t id = nullVoxelID,
 			const md_t md = nullVoxelMD) :
-			ids(Vec3<size_t>(sectorLength, sectorLength, sectorLength), id),
-			mds(Vec3<size_t>(sectorLength, sectorLength, sectorLength), md)
+			ids(size, id),
+			mds(size, md)
 		{}
 		virtual ~Sector()
 		{}
 
-		virtual void update(const Register& _register,
+		inline Array3<id_t>& getIDS() noexcept
+		{
+			return ids;
+		}
+		inline const Array3<id_t>& getIDS() const noexcept
+		{
+			return ids;
+		}
+
+		inline Array3<md_t>& getMDS() noexcept
+		{
+			return mds;
+		}
+		inline const Array3<md_t>& getMDS() const noexcept
+		{
+			return mds;
+		}
+
+		virtual void update(const Registry& registry,
 			Cluster& cluster, const time_t deltaTime)
 		{
 			for (size_t i = 0; i < sectorSize; i++)
 			{
 				const auto id = ids.get(i);
-				const auto& voxel = _register.get(id);
+				const auto& voxel = registry.get(id);
 
 				if (voxel.updater)
-					voxel.updater->update(_register, deltaTime, i, cluster);
+					voxel.updater->update(registry, deltaTime, i, cluster);
 			}
 		}
 	};

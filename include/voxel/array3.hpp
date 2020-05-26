@@ -14,7 +14,7 @@ namespace VOXEL_NAMESPACE
 	public:
 		Array3(const Vec3<size_t>& _size,
 			const T& value = T()) :
-			count(_size.x* _size.y* _size.z),
+			count(_size.x * _size.y * _size.z),
 			size(_size)
 		{
 			data = new T[count];

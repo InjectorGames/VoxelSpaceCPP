@@ -4,14 +4,12 @@
 
 namespace VOXEL_NAMESPACE
 {
-	class Register
+	class Registry
 	{
 	protected:
-		size_t count;
 		std::vector<Voxel> voxels;
 	public:
-		Register(const std::vector<Voxel>& _voxels) :
-			count(voxels.size()),
+		Registry(const std::vector<Voxel>& _voxels) :
 			voxels(_voxels)
 		{
 			if (voxels.at(0).id != nullVoxelID)
@@ -22,7 +20,7 @@ namespace VOXEL_NAMESPACE
 
 		inline const Voxel& get(const id_t id) const noexcept
 		{
-			if (id < count)
+			if (id < voxels.size())
 				return voxels[id];
 			else
 				return voxels[unknownVoxelID];
@@ -30,7 +28,7 @@ namespace VOXEL_NAMESPACE
 		template<class TV = Voxel>
 		inline const TV& get(const id_t id) const noexcept
 		{
-			if (id < count)
+			if (id < voxels.size())
 				return static_cast<TV&>(voxels[id]);
 			else
 				return static_cast<TV&>(voxels[unknownVoxelID]);
