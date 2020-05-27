@@ -10,37 +10,37 @@ namespace VOXEL_NAMESPACE
 	class Terrain
 	{
 	protected:
-		std::map<Vec3<size_t>, T> sectors;
+		std::map<size3_t, T> sectors;
 
 		inline const bool updateSector(const Registry& registry, const time_t deltaTime,
-			const Vec3<size_t>& position, T& sector)
+			const size3_t& position, T& sector)
 		{
-			auto leftIterator = sectors.find(Vec3<size_t>(
+			auto leftIterator = sectors.find(size3_t(
 				position.x + leftDir, position.y, position.z));
 			if (leftIterator == sectors.end())
 				return false;
 
-			auto rightIterator = sectors.find(Vec3<size_t>(
+			auto rightIterator = sectors.find(size3_t(
 				position.x + rightDir, position.y, position.z));
 			if (rightIterator == sectors.end())
 				return false;
 
-			auto downIterator = sectors.find(Vec3<size_t>(
+			auto downIterator = sectors.find(size3_t(
 				position.x, position.y + downDir, position.z));
 			if (downIterator == sectors.end())
 				return false;
 
-			auto upIterator = sectors.find(Vec3<size_t>(
+			auto upIterator = sectors.find(size3_t(
 				position.x, position.y + upDir, position.z));
 			if (upIterator == sectors.end())
 				return false;
 
-			auto backIterator = sectors.find(Vec3<size_t>(
+			auto backIterator = sectors.find(size3_t(
 				position.x, position.y, position.z + backDir));
 			if (backIterator == sectors.end())
 				return false;
 
-			auto forwardIterator = sectors.find(Vec3<size_t>(
+			auto forwardIterator = sectors.find(size3_t(
 				position.x, position.y, position.z + forwardDir));
 			if (forwardIterator == sectors.end())
 				return false;
@@ -56,8 +56,12 @@ namespace VOXEL_NAMESPACE
 			return true;
 		}
 	public:
-		Terrain(const std::map<Vec3<size_t>, T>& _sectors = {}) :
-			sectors(_sectors)
+		terrain_pos_t position;
+
+		Terrain(const std::map<size3_t, T>& _sectors = {},
+			const terrain_pos_t& _position = terrain_pos_t()) :
+			sectors(_sectors),
+			position(_position)
 		{}
 		virtual ~Terrain()
 		{}

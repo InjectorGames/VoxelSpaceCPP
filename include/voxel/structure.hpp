@@ -12,7 +12,7 @@ namespace VOXEL_NAMESPACE
 	{
 	protected:
 		inline const bool updateSector(const Registry& registry, const time_t deltaTime,
-			const Vec3<size_t>& position, T& sector)
+			const size3_t& position, T& sector)
 		{
 			size_t leftIndex;
 			size_t rightIndex;
@@ -21,12 +21,18 @@ namespace VOXEL_NAMESPACE
 			size_t backIndex;
 			size_t forwardIndex;
 
-			if (!positionToIndexNoex(position.x + leftDir, position.y, position.z, leftIndex) ||
-				!positionToIndexNoex(position.x + rightDir, position.y, position.z, rightIndex) ||
-				!positionToIndexNoex(position.x, position.y + downDir, position.z, downIndex) ||
-				!positionToIndexNoex(position.x, position.y + upDir, position.z, upIndex) ||
-				!positionToIndexNoex(position.x, position.y, position.z + backDir, backIndex) ||
-				!positionToIndexNoex(position.x, position.y, position.z + forwardDir, forwardIndex))
+			if (!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x + leftDir, position.y, position.z, leftIndex) ||
+				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x + rightDir, position.y, position.z, rightIndex) ||
+				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y + downDir, position.z, downIndex) ||
+				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y + upDir, position.z, upIndex) ||
+				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y, position.z + backDir, backIndex) ||
+				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y, position.z + forwardDir, forwardIndex))
 				return false;
 
 			auto cluster = Cluster(sector,
@@ -40,9 +46,14 @@ namespace VOXEL_NAMESPACE
 			return true;
 		}
 	public:
-		Structure(const Vec3<size_t>& size,
+		structure_pos_t position;
+
+		Structure(const size3_t& size,
+			const structure_pos_t& _position =
+			structure_pos_t(),
 			const T& sector = T()) :
-			Array3<T>(size, sector)
+			Array3<T>(size, sector),
+			position(_position)
 		{}
 		virtual ~Structure()
 		{}
@@ -52,9 +63,8 @@ namespace VOXEL_NAMESPACE
 		{
 			for (size_t i = 0; i < count; i++)
 			{
-				const auto position = indexToPosition(i);
-				auto& sector = get(i);
-				updateSector(registry, deltaTime, position, sector);
+				const auto position = indexToPosition<sectorLength, sectorLegth>(i);
+				updateSector(registry, deltaTime, position, get(i));
 			}
 		}
 	};

@@ -37,7 +37,7 @@ namespace VOXEL_NAMESPACE
 	public:
 		int sleepDelay;
 
-		AsyncStructure(const Vec3<size_t>& size,
+		AsyncStructure(const size3_t& size,
 			const T& sector = T(),
 			const int _sleepDelay = 1) :
 			Structure<T>(size, sector),

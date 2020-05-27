@@ -6,16 +6,26 @@ namespace VOXEL_NAMESPACE
 {
 	struct Mesh
 	{
+#if defined(VOXEL_USE_MESH_NORM)
+		std::vector<mesh_norm_t> normals;
+#endif
+
 		std::vector<mesh_vert_t> vertices;
 		std::vector<mesh_ind_t> indices;
-		std::vector<mesh_norm_t> normals;
 
-		Mesh(const std::vector<mesh_vert_t>& _vertices = {},
-			const std::vector<mesh_ind_t>& _indices = {},
-			const std::vector<mesh_norm_t>& _normals = {}) :
+		Mesh(
+#if defined(VOXEL_USE_MESH_NORM)
+			const std::vector<mesh_norm_t>& _normals = {},
+#endif
+			const std::vector<mesh_vert_t>& _vertices = {},
+			const std::vector<mesh_ind_t>& _indices = {}
+		) :
+			
+#if defined(VOXEL_USE_MESH_NORM)
+			normals(_normals),
+#endif
 			vertices(_vertices),
-			indices(_indices),
-			normals(_normals)
+			indices(_indices)
 		{}
 	};
 }

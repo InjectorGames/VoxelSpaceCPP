@@ -1,5 +1,8 @@
 #pragma once
-#include <voxel/defines.hpp>
+
+#if !defined(VOXEL_NAMESPACE)
+#define VOXEL_NAMESPACE voxel
+#endif
 
 namespace VOXEL_NAMESPACE
 {

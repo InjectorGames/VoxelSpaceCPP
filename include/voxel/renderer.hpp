@@ -11,6 +11,6 @@ namespace VOXEL_NAMESPACE
 	{
 	public:
 		virtual void generate(const Registry& registry, const Cluster& cluster,
-			 const Vec3<size_t>& position, Mesh& mesh) = 0;
+			 const size3_t& position, Mesh& mesh) = 0;
 	};
 }

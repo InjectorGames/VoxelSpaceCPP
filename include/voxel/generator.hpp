@@ -52,7 +52,7 @@ namespace VOXEL_NAMESPACE
 				{
 					for (size_t x = 0; x < sectorLength; x++)
 					{
-						const auto position = Vec3<size_t>(x, y, z);
+						const auto position = size3_t(x, y, z);
 						const auto id = cluster.center.getIDS().get(position);
 						const auto& voxel = registry.get(id);
 

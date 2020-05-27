@@ -6,75 +6,345 @@ namespace VOXEL_NAMESPACE
 	class BlockRenderer : public Renderer
 	{
 	protected:
-		inline static const std::vector<mesh_vert_t> leftBlockVertices
+		inline static void generateLeft(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
 		{
-			0.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 1.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-		};
-		inline static const std::vector<mesh_vert_t> rightBlockVertices
-		{
-			1.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 1.0f,
-			0.0f, 1.0f, 0.0f,
-		};
-		inline static const std::vector<mesh_vert_t> downBlockVertices
-		{
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 1.0f,
-		};
-		inline static const std::vector<mesh_vert_t> upBlockVertices
-		{
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 0.0f,
-		};
-		inline static const std::vector<mesh_vert_t> backBlockVertices
-		{
-			0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-		};
-		inline static const std::vector<mesh_vert_t> forwardBlockVertices
-		{
-			1.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 1.0f,
-			0.0f, 1.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-		};
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(leftDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
 
-		// TODO: make method for each side
+				static_cast<mesh_norm_t>(leftDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
 
-		inline static void renderBlockSide(Mesh& mesh, size_t& vertexIndex,
-			const size_t x, const size_t y, const size_t z,
-			const std::vector<mesh_vert_t>& blockVertices)
-		{
+				static_cast<mesh_norm_t>(leftDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(leftDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
 			const mesh_vert_t vertices[]
 			{
-				x + blockVertices[0], y + blockVertices[1], z + blockVertices[2],
-				x + blockVertices[3], y + blockVertices[4], z + blockVertices[5],
-				x + blockVertices[6], y + blockVertices[7], z + blockVertices[8],
-				x + blockVertices[9], y + blockVertices[10], z + blockVertices[11],
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
 
 			const mesh_ind_t indices[]
 			{
-				vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex, vertexIndex + 2, vertexIndex + 3,
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
 			};
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+		}
+		inline static void generateRight(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
+		{
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(rightDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
 
-			vertexIndex += 4;
+				static_cast<mesh_norm_t>(rightDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(rightDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(rightDir),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
+			const mesh_vert_t vertices[]
+			{
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+			const mesh_ind_t indices[]
+			{
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
+			};
+			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+		}
+		inline static void generateDown(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
+		{
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(downDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(downDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(downDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(downDir),
+				static_cast<mesh_norm_t>(0),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
+			const mesh_vert_t vertices[]
+			{
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z + 1),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+			const mesh_ind_t indices[]
+			{
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
+			};
+			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+		}
+		inline static void generateUp(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
+		{
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(upDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(upDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(upDir),
+				static_cast<mesh_norm_t>(0),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(upDir),
+				static_cast<mesh_norm_t>(0),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
+			const mesh_vert_t vertices[]
+			{
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+			const mesh_ind_t indices[]
+			{
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
+			};
+			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+		}
+		inline static void generateBack(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
+		{
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(backDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(backDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(backDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(backDir),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
+			const mesh_vert_t vertices[]
+			{
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+			const mesh_ind_t indices[]
+			{
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
+			};
+			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
+		}
+		inline static void generateForward(
+			const size3_t& position, const size_t vertexIndex, Mesh& mesh)
+		{
+#if defined(VOXEL_USE_MESH_NORM)
+			const mesh_norm_t normals[]
+			{
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(forwardDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(forwardDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(forwardDir),
+
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(0),
+				static_cast<mesh_norm_t>(forwardDir),
+			};
+			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
+#endif
+
+			const mesh_vert_t vertices[]
+			{
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z),
+
+				static_cast<mesh_vert_t>(position.x + 1),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y + 1),
+				static_cast<mesh_vert_t>(position.z + 1),
+
+				static_cast<mesh_vert_t>(position.x),
+				static_cast<mesh_vert_t>(position.y),
+				static_cast<mesh_vert_t>(position.z + 1),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+			const mesh_ind_t indices[]
+			{
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 1),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex),
+				static_cast<mesh_ind_t>(vertexIndex + 2),
+				static_cast<mesh_ind_t>(vertexIndex + 3),
+			};
+			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 	public:
 		void generate(const Registry& registry, const Cluster& cluster,
-			const Vec3<size_t>& position, Mesh& mesh) override
+			const size3_t& position, Mesh& mesh) override
 		{
 			auto vertexIndex = mesh.vertices.size() / 3;
 
@@ -83,67 +353,122 @@ namespace VOXEL_NAMESPACE
 			if (position.x == 0)
 			{
 				if (!registry.get(cluster.left.getIDS().get(sectorSafeLength, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				{
+					generateLeft(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
+
 				if (!registry.get(cluster.center.getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
+				{
+					generateRight(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else if (position.x == sectorSafeLength)
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				{
+					generateLeft(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.right.getIDS().get(zeroDir, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
+				{
+					generateRight(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, leftBlockVertices);
+				{
+					generateLeft(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.center.getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, rightBlockVertices);
+				{
+					generateRight(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 
 			if (position.y == 0)
 			{
 				if (!registry.get(cluster.down.getIDS().get(position.x, sectorSafeLength, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				{
+					generateDown(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + upDir, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
+				{
+					generateUp(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else if (position.y == sectorSafeLength)
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + downDir, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				{
+					generateDown(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.up.getIDS().get(position.x, zeroDir, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
+				{
+					generateUp(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + downDir, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, downBlockVertices);
+				{
+					generateDown(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y + upDir, position.z)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, upBlockVertices);
+				{
+					generateUp(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 
 			if (position.z == 0)
 			{
 				if (!registry.get(cluster.back.getIDS().get(position.x, position.y, sectorSafeLength)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				{
+					generateBack(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
+				{
+					generateForward(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else if (position.z == sectorSafeLength)
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + backDir)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				{
+					generateBack(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.forward.getIDS().get(position.x, position.y, zeroDir)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
+				{
+					generateForward(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 			else
 			{
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + backDir)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, backBlockVertices);
+				{
+					generateBack(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 				if (!registry.get(cluster.center.getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
-					renderBlockSide(mesh, vertexIndex, position.x, position.y, position.z, forwardBlockVertices);
+				{
+					generateForward(position, vertexIndex, mesh);
+					vertexIndex += quadVertCount;
+				}
 			}
 		}
 	};

@@ -1,5 +1,5 @@
 #pragma once
-#include <voxel/vec2.hpp>
+#include <voxel/defines.hpp>
 #include <stdexcept>
 
 namespace VOXEL_NAMESPACE
@@ -9,22 +9,13 @@ namespace VOXEL_NAMESPACE
 	{
 	protected:
 		size_t count;
-		Vec2<size_t> size;
+		size2_t size;
 		T* data;
 	public:
-		Array2(const Vec2<size_t>& _size,
+		Array2(const size2_t& _size,
 			const T& value = T()) :
 			count(_size.x * _size.y),
 			size(_size)
-		{
-			data = new T[count];
-			std::uninitialized_fill_n(data, count, value);
-		}
-		Array2(const size_t _sizeX,
-			const size_t _sizeY,
-			const T& value = T()) :
-			count(_sizeX * _sizeY),
-			size(_sizeX, _sizeY)
 		{
 			data = new T[count];
 			std::uninitialized_fill_n(data, count, value);
@@ -47,17 +38,9 @@ namespace VOXEL_NAMESPACE
 			return count;
 		}
 
-		inline const Vec2<size_t>& getSize() const noexcept
+		inline const size2_t& getSize() const noexcept
 		{
 			return size;
-		}
-		inline const size_t getSizeX() const noexcept
-		{
-			return size.x;
-		}
-		inline const size_t getSizeY() const noexcept
-		{
-			return size.y;
 		}
 
 		inline T* getData() noexcept
@@ -69,85 +52,207 @@ namespace VOXEL_NAMESPACE
 			return data;
 		}
 
-		inline T& getSafe(const size_t index)
+		inline T& get(
+			const size_t index) noexcept
 		{
-			if (index >= size)
-				throw std::out_of_range("Out of size range");
 			return data[index];
 		}
-		inline const T& getSafe(const size_t index) const
+		inline const T& get(
+			const size_t index) const noexcept
 		{
-			if (index >= size)
-				throw std::out_of_range("Out of size range");
 			return data[index];
 		}
-		inline void setSafe(const size_t index, const T& value)
+		inline T& get(
+			const size2_t& position) noexcept
 		{
-			if (index >= size)
-				throw std::out_of_range("Out of size range");
-			data[index] = T(value);
+			return data[position.x + size.x * position.y];
+		}
+		inline T& get(
+			const size_t x, const size_t y) noexcept
+		{
+			return data[x + size.x * y];
+		}
+		inline const T& get(
+			const size2_t& position) const noexcept
+		{
+			return data[position.x + size.x * position.y];
+		}
+		inline const T& get(
+			const size_t x, const size_t y) const noexcept
+		{
+			return data[x + size.x * y];
 		}
 
-		inline T& getSafe(const size_t x, const size_t y)
-		{
-			if (x >= sizeX || y >= sizeY)
-				throw std::out_of_range("Out of size range");
-			return data[x + sizeX * y];
-		}
-		inline const T& getSafe(const size_t x, const size_t y) const
-		{
-			if (x >= sizeX || y >= sizeY)
-				throw std::out_of_range("Out of size range");
-			return data[x + sizeX * y];
-		}
-		inline void setSafe(const size_t x, const size_t y, const T& value)
-		{
-			if (x >= sizeX || y >= sizeY)
-				throw std::out_of_range("Out of size range");
-			data[x + sizeX * y] = T(value);
-		}
-
-		inline T& get(const size_t index) noexcept
-		{
-			return data[index];
-		}
-		inline const T& get(const size_t index) const noexcept
-		{
-			return data[index];
-		}
-		inline void set(const size_t index, const T& value) noexcept
+		inline void set(
+			const size_t index, const T& value) noexcept
 		{
 			data[index] = T(value);
 		}
+		inline void set(
+			const size2_t& position, const T& value) noexcept
+		{
+			data[position.x + size.x * position.y] = T(value);
+		}
+		inline void set(
+			const size_t x, const size_t y, const T& value) noexcept
+		{
+			data[x + size.x * y] = T(value);
+		}
 
-		inline T& get(const size_t x, const size_t y) noexcept
+		inline T& getSafe(
+			const size_t index)
 		{
-			return data[x + sizeX * y];
+			if (index >= count)
+				throw std::out_of_range("Out of size range");
+			return data[index];
 		}
-		inline const T& get(const size_t x, const size_t y) const noexcept
+		inline const T& getSafe(
+			const size_t index) const
 		{
-			return data[x + sizeX * y];
+			if (index >= count)
+				throw std::out_of_range("Out of size range");
+			return data[index];
 		}
-		inline void set(const size_t x, const size_t y, const T& value) noexcept
+		inline T& getSafe(
+			const size2_t& position)
 		{
-			data[x + sizeX * y] = T(value);
+			if (position.x >= size.x || position.y >= size.y)
+				throw std::out_of_range("Out of size range");
+			return data[position.x + size.x * position.y];
+		}
+		inline T& getSafe(
+			const size_t x, const size_t y)
+		{
+			if (x >= size.x || y >= size.y)
+				throw std::out_of_range("Out of size range");
+			return data[x + size.x * y];
+		}
+		inline const T& getSafe(
+			const size2_t& position) const
+		{
+			if (position.x >= size.x || position.y >= size.y)
+				throw std::out_of_range("Out of size range");
+			return data[position.x + size.x * position.y];
+		}
+		inline const T& getSafe(
+			const size_t x, const size_t y) const
+		{
+			if (x >= size.x || y >= size.y)
+				throw std::out_of_range("Out of size range");
+			return data[x + size.x * y];
+		}
+
+		inline void setSafe(
+			const size_t index, const T& value)
+		{
+			if (index >= count)
+				throw std::out_of_range("Out of size range");
+			data[index] = T(value);
+		}
+		inline void setSafe(
+			const size2_t& position, const T& value)
+		{
+			if (position.x >= size.x || position.y >= size.y)
+				throw std::out_of_range("Out of size range");
+			data[position.x + size.x * position.y] = T(value);
+		}
+		inline void setSafe(
+			const size_t x, const size_t y, const T& value)
+		{
+			if (x >= size.x || y >= size.y)
+				throw std::out_of_range("Out of size range");
+			data[x + size.x * y] = T(value);
+		}
+
+		inline const bool getNoex(
+			const size_t index, T& value) noexcept
+		{
+			if (index >= count)
+				return false;
+			value = data[index];
+			return true;
+		}
+		inline const bool getNoex(
+			const size_t index, const T& value) const noexcept
+		{
+			if (index >= count)
+				return false;
+			value = data[index];
+			return true;
+		}
+		inline const bool getNoex(
+			const size2_t& position, T& value) noexcept
+		{
+			if (position.x >= size.x || position.y >= size.y)
+				return false;
+			value = data[position.x + size.x * position.y];
+			return true;
+		}
+		inline const bool getNoex(
+			const size_t x, const size_t y, T& value) noexcept
+		{
+			if (x >= size.x || y >= size.y)
+				return false;
+			value = data[x + size.x * y];
+			return true;
+		}
+		inline const bool getNoex(
+			const size2_t& position, const T& value) const noexcept
+		{
+			if (position.x >= size.x || position.y >= size.y)
+				return false;
+			value = data[position.x + size.x * position.y];
+			return true;
+		}
+		inline const bool getNoex(
+			const size_t x, const size_t y, const T& value) const noexcept
+		{
+			if (x >= size.x || y >= size.y)
+				return false;
+			value = data[x + size.x * y];
+			return true;
+		}
+
+		inline const bool setNoex(
+			const size_t index, const T& value) noexcept
+		{
+			if (index >= count)
+				return false;
+			data[index] = T(value);
+			return true;
+		}
+		inline const bool setNoex(
+			const size2_t& position, const T& value) noexcept
+		{
+			if (position.x >= size.x || position.y >= size.y)
+				return false;
+			data[position.x + size.x * position.y] = T(value);
+			return true;
+		}
+		inline const bool setNoex(
+			const size_t x, const size_t y, const T& value) noexcept
+		{
+			if (x >= size.x || y >= size.y)
+				return false;
+			data[x + size.x * y] = T(value);
+			return true;
 		}
 
 		inline void fill(const T& value = T()) noexcept
 		{
 			std::uninitialized_fill_n(data, size, value);
 		}
-
-		inline const size_t positionToIndex(
-			const size_t x, const size_t y) const noexcept
-		{
-			return x + sizeX * y;
-		}
-		inline void indexToPosition(
-			const size_t index, size_t& x, size_t& y) const noexcept
-		{
-			y = index / sizeX;
-			x = index - y * sizeX;
-		}
 	};
+
+	inline const size_t positionToIndex(
+		const size2_t& position) const noexcept
+	{
+		return position.x + size.x * position.y;
+	}
+	inline void indexToPosition(
+		const size_t index, size_t& x, size_t& y) const noexcept
+	{
+		y = index / size.x;
+		x = index - y * size.x;
+	}
 }

@@ -12,9 +12,8 @@ namespace VOXEL_NAMESPACE
 		Array3<id_t> ids;
 		Array3<md_t> mds;
 	public:
-
-		Sector(const Vec3<size_t> size =
-			Vec3<size_t>(sectorLength, sectorLength, sectorLength),
+		Sector(const size3_t size = size3_t(
+			sectorLength, sectorLength, sectorLength),
 			const id_t id = nullVoxelID,
 			const md_t md = nullVoxelMD) :
 			ids(size, id),
