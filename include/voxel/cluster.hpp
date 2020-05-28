@@ -5,21 +5,21 @@ namespace VOXEL_NAMESPACE
 {
 	struct Cluster
 	{
-		Sector& center;
-		Sector& left;
-		Sector& right;
-		Sector& down;
-		Sector& up;
-		Sector& back;
-		Sector& forward;
+		std::shared_ptr<Sector> center;
+		std::shared_ptr<Sector> left;
+		std::shared_ptr<Sector> right;
+		std::shared_ptr<Sector> down;
+		std::shared_ptr<Sector> up;
+		std::shared_ptr<Sector> back;
+		std::shared_ptr<Sector> forward;
 
-		Cluster(Sector& _center,
-			Sector& _left,
-			Sector& _right,
-			Sector& _down,
-			Sector& _up,
-			Sector& _back,
-			Sector& _forward) :
+		Cluster(const std::shared_ptr<Sector>& _center = nullptr,
+			const std::shared_ptr<Sector>& _left = nullptr,
+			const std::shared_ptr<Sector>& _right = nullptr,
+			const std::shared_ptr<Sector>& _down = nullptr,
+			const std::shared_ptr<Sector>& _up = nullptr,
+			const std::shared_ptr<Sector>& _back = nullptr,
+			const std::shared_ptr<Sector>& _forward = nullptr) :
 			center(_center),
 			left(_left),
 			right(_right),

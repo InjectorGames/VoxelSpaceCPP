@@ -37,9 +37,10 @@ namespace VOXEL_NAMESPACE
 	public:
 		int sleepDelay;
 
-		AsyncTerrain(const std::map<size3_t, T>& sectors = {},
+		AsyncTerrain(const terrain_pos_t& position,
+			const std::map<sector_pos_t, std::shared_ptr<T>>& sectors = {},
 			const int _sleepDelay = 1) :
-			Terrain<T>(sectors),
+			Terrain<T>(position, sectors),
 			sleepDelay(_sleepDelay),
 			isRunning(false),
 			updateMutex(),

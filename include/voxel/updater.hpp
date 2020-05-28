@@ -9,7 +9,7 @@ namespace VOXEL_NAMESPACE
 	class Updater
 	{
 	public:
-		virtual void update(const Registry& registry,
-			const time_t deltaTime, const size_t index, Cluster& cluster) = 0;
+		virtual void update(const Registry& registry, const time_t deltaTime,
+			const size_t index, Cluster& cluster) = 0;
 	};
 }

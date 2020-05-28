@@ -8,55 +8,80 @@
 namespace VOXEL_NAMESPACE
 {
 	template<class T = Sector>
-	class Structure : public Array3<T>
+	class Structure : public Array3<std::shared_ptr<T>>
 	{
 	protected:
-		inline const bool updateSector(const Registry& registry, const time_t deltaTime,
-			const size3_t& position, T& sector)
-		{
-			size_t leftIndex;
-			size_t rightIndex;
-			size_t downIndex;
-			size_t upIndex;
-			size_t backIndex;
-			size_t forwardIndex;
-
-			if (!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x + leftDir, position.y, position.z, leftIndex) ||
-				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x + rightDir, position.y, position.z, rightIndex) ||
-				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x, position.y + downDir, position.z, downIndex) ||
-				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x, position.y + upDir, position.z, upIndex) ||
-				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x, position.y, position.z + backDir, backIndex) ||
-				!positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
-				(position.x, position.y, position.z + forwardDir, forwardIndex))
-				return false;
-
-			auto cluster = Cluster(sector,
-				get(leftIndex),
-				get(rightIndex),
-				get(downIndex),
-				get(upIndex),
-				get(backIndex),
-				get(forwardIndex));
-			sector.update(registry, cluster, deltaTime);
-			return true;
-		}
-	public:
 		structure_pos_t position;
 
-		Structure(const size3_t& size,
-			const structure_pos_t& _position =
-			structure_pos_t(),
-			const T& sector = T()) :
-			Array3<T>(size, sector),
+		inline void updateSector(const Registry& registry, const time_t deltaTime,
+			const Vec3<size_t>& position, const std::shared_ptr<T>& sector)
+		{
+			auto cluster = Cluster();
+			size_t index;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x + leftDir, position.y, position.z, index))
+				cluster.left = get(index);
+			else
+				cluster.left = nullptr;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x + rightDir, position.y, position.z, index))
+				cluster.right = get(index);
+			else
+				cluster.right = nullptr;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y + downDir, position.z, index))
+				cluster.down = get(index);
+			else
+				cluster.down = nullptr;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y + upDir, position.z, index))
+				cluster.up = get(index);
+			else
+				cluster.up = nullptr;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y, position.z + backDir, index))
+				cluster.back = get(index);
+			else
+				cluster.back = nullptr;
+
+			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+				(position.x, position.y, position.z + forwardDir, index))
+				cluster.forward = get(index);
+			else
+				cluster.forward = nullptr;
+
+			sector->update(registry, cluster, deltaTime);
+		}
+	public:
+		Structure(const Vec3<size_t>& size,
+			const structure_pos_t& _position) :
+			Array3<std::shared_ptr<T>>(size, nullptr),
 			position(_position)
-		{}
+		{
+			for (size_t z = 0; z < size.z; z++)
+			{
+				for (size_t y = 0; y < size.y; y++)
+				{
+					for (size_t x = 0; x < size.x; x++)
+					{
+						const auto position = sector_pos_t(x, y, z);
+						set(x, y, z, std::make_shared<Sector>(position));
+					}
+				}
+			}
+		}
 		virtual ~Structure()
 		{}
+
+		inline const structure_pos_t& getPosition() const noexcept
+		{
+			return position;
+		}
 
 		virtual void update(const Registry& registry,
 			const time_t deltaTime)

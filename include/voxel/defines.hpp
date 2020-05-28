@@ -1,30 +1,10 @@
 #pragma once
-#define VOXEL_NAMESPACE voxel
 #include <voxel/vec2.hpp>
 #include <voxel/vec3.hpp>
-
 #include <cstdint>
 
 namespace voxel
 {
-#if defined(VOXEL_SIZE_VAL_TYPE)
-	using size_val_t = VOXEL_SIZE_VAL_TYPE;
-#else
-	using size_val_t = size_t;
-#endif
-
-#if defined(VOXEL_SIZE_2_TYPE)
-	using size2_t = VOXEL_SIZE_2_TYPE;
-#else
-	using size2_t = Vec2<size_val_t>;
-#endif
-
-#if defined(VOXEL_SIZE_3_TYPE)
-	using size3_t = VOXEL_SIZE_3_TYPE;
-#else
-	using size3_t = Vec3<size_val_t>;
-#endif
-
 #if defined(VOXEL_ID_TYPE)
 	using id_t = VOXEL_ID_TYPE;
 #else
@@ -61,6 +41,12 @@ namespace voxel
 	using time_t = VOXEL_TIME_TYPE;
 #else
 	using time_t = float;
+#endif
+
+#if defined(VOXEL_SECTOR_POS_TYPE)
+	using sector_pos_t = VOXEL_SECTOR_POS_TYPE;
+#else
+	using sector_pos_t = Vec3<uint8_t>;
 #endif
 
 #if defined(VOXEL_STRUCTURE_POS_TYPE)

@@ -1,5 +1,6 @@
 #pragma once
 #include <voxel/defines.hpp>
+#include <voxel/vec2.hpp>
 #include <stdexcept>
 
 namespace VOXEL_NAMESPACE
@@ -9,10 +10,10 @@ namespace VOXEL_NAMESPACE
 	{
 	protected:
 		size_t count;
-		size2_t size;
+		Vec2<size_t> size;
 		T* data;
 	public:
-		Array2(const size2_t& _size,
+		Array2(const Vec2<size_t>& _size,
 			const T& value = T()) :
 			count(_size.x * _size.y),
 			size(_size)
@@ -38,7 +39,7 @@ namespace VOXEL_NAMESPACE
 			return count;
 		}
 
-		inline const size2_t& getSize() const noexcept
+		inline const Vec2<size_t>& getSize() const noexcept
 		{
 			return size;
 		}
@@ -63,7 +64,7 @@ namespace VOXEL_NAMESPACE
 			return data[index];
 		}
 		inline T& get(
-			const size2_t& position) noexcept
+			const Vec2<size_t>& position) noexcept
 		{
 			return data[position.x + size.x * position.y];
 		}
@@ -73,7 +74,7 @@ namespace VOXEL_NAMESPACE
 			return data[x + size.x * y];
 		}
 		inline const T& get(
-			const size2_t& position) const noexcept
+			const Vec2<size_t>& position) const noexcept
 		{
 			return data[position.x + size.x * position.y];
 		}
@@ -89,7 +90,7 @@ namespace VOXEL_NAMESPACE
 			data[index] = T(value);
 		}
 		inline void set(
-			const size2_t& position, const T& value) noexcept
+			const Vec2<size_t>& position, const T& value) noexcept
 		{
 			data[position.x + size.x * position.y] = T(value);
 		}
@@ -114,7 +115,7 @@ namespace VOXEL_NAMESPACE
 			return data[index];
 		}
 		inline T& getSafe(
-			const size2_t& position)
+			const Vec2<size_t>& position)
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				throw std::out_of_range("Out of size range");
@@ -128,7 +129,7 @@ namespace VOXEL_NAMESPACE
 			return data[x + size.x * y];
 		}
 		inline const T& getSafe(
-			const size2_t& position) const
+			const Vec2<size_t>& position) const
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				throw std::out_of_range("Out of size range");
@@ -150,7 +151,7 @@ namespace VOXEL_NAMESPACE
 			data[index] = T(value);
 		}
 		inline void setSafe(
-			const size2_t& position, const T& value)
+			const Vec2<size_t>& position, const T& value)
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				throw std::out_of_range("Out of size range");
@@ -181,7 +182,7 @@ namespace VOXEL_NAMESPACE
 			return true;
 		}
 		inline const bool getNoex(
-			const size2_t& position, T& value) noexcept
+			const Vec2<size_t>& position, T& value) noexcept
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				return false;
@@ -197,7 +198,7 @@ namespace VOXEL_NAMESPACE
 			return true;
 		}
 		inline const bool getNoex(
-			const size2_t& position, const T& value) const noexcept
+			const Vec2<size_t>& position, const T& value) const noexcept
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				return false;
@@ -222,7 +223,7 @@ namespace VOXEL_NAMESPACE
 			return true;
 		}
 		inline const bool setNoex(
-			const size2_t& position, const T& value) noexcept
+			const Vec2<size_t>& position, const T& value) noexcept
 		{
 			if (position.x >= size.x || position.y >= size.y)
 				return false;
@@ -245,7 +246,7 @@ namespace VOXEL_NAMESPACE
 	};
 
 	inline const size_t positionToIndex(
-		const size2_t& position) const noexcept
+		const Vec2<size_t>& position) const noexcept
 	{
 		return position.x + size.x * position.y;
 	}

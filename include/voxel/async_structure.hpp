@@ -38,9 +38,10 @@ namespace VOXEL_NAMESPACE
 		int sleepDelay;
 
 		AsyncStructure(const size3_t& size,
-			const T& sector = T(),
+			const structure_pos_t& position,
+			const std::shared_ptr<T>& sector = T(),
 			const int _sleepDelay = 1) :
-			Structure<T>(size, sector),
+			Structure<T>(size, position, sector),
 			sleepDelay(_sleepDelay),
 			isRunning(false),
 			updateMutex(),

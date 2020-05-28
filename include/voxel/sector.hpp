@@ -9,18 +9,26 @@ namespace VOXEL_NAMESPACE
 	class Sector
 	{
 	protected:
+		sector_pos_t position;
 		Array3<id_t> ids;
 		Array3<md_t> mds;
 	public:
-		Sector(const size3_t size = size3_t(
+		Sector(const sector_pos_t& _position,
+			const Vec3<size_t> size = Vec3<size_t>(
 			sectorLength, sectorLength, sectorLength),
 			const id_t id = nullVoxelID,
 			const md_t md = nullVoxelMD) :
+			position(_position),
 			ids(size, id),
 			mds(size, md)
 		{}
 		virtual ~Sector()
 		{}
+
+		inline const sector_pos_t& getPosition() const noexcept
+		{
+			return position;
+		}
 
 		inline Array3<id_t>& getIDS() noexcept
 		{

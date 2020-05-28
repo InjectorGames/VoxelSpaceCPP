@@ -23,16 +23,23 @@ namespace VOXEL_NAMESPACE
 			fastNoise = nullptr;
 		}
 
+		inline const int getSeed() const noexcept
+		{
+			return fastNoise->GetSeed();
+		}
+		inline void setSeed(const int seed) noexcept
+		{
+			fastNoise->SetSeed(seed);
+		}
+
 		inline void generateRandom(Array3<id_t>& ids,
 			const id_t id,
-			const int32_t chance = 50,
-			const uint32_t seed = 1337) const
+			const int32_t chance = 50) const
 		{
 			if (chance < 0 || chance > 100)
 				throw std::range_error("Chance out of range");
 
-			srand(seed);
-
+			srand(static_cast<uint32_t>(fastNoise->GetSeed()));
 			const auto modulo = 10000 / chance;
 
 			for (size_t i = 0; i < sectorSize; i++)
@@ -52,8 +59,8 @@ namespace VOXEL_NAMESPACE
 				{
 					for (size_t x = 0; x < sectorLength; x++)
 					{
-						const auto position = size3_t(x, y, z);
-						const auto id = cluster.center.getIDS().get(position);
+						const auto position = Vec3<size_t>(x, y, z);
+						const auto id = cluster.center->getIDS().get(position);
 						const auto& voxel = registry.get(id);
 
 						if (voxel.renderer)

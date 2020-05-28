@@ -10,63 +10,117 @@ namespace VOXEL_NAMESPACE
 	class Terrain
 	{
 	protected:
-		std::map<size3_t, T> sectors;
+		terrain_pos_t position;
+		std::map<sector_pos_t, std::shared_ptr<T>> sectors;
 
-		inline const bool updateSector(const Registry& registry, const time_t deltaTime,
-			const size3_t& position, T& sector)
+		inline void updateSector(const Registry& registry, const time_t deltaTime,
+			const sector_pos_t& position, const std::shared_ptr<T>& sector)
 		{
-			auto leftIterator = sectors.find(size3_t(
+			auto cluster = Cluster();
+
+			auto iterator = sectors.find(sector_pos_t(
 				position.x + leftDir, position.y, position.z));
-			if (leftIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.left = iterator->second;
+			else
+				cluster.left = nullptr;
 
-			auto rightIterator = sectors.find(size3_t(
+			iterator = sectors.find(sector_pos_t(
 				position.x + rightDir, position.y, position.z));
-			if (rightIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.right = iterator->second;
+			else
+				cluster.right = nullptr;
 
-			auto downIterator = sectors.find(size3_t(
+			iterator = sectors.find(sector_pos_t(
 				position.x, position.y + downDir, position.z));
-			if (downIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.down = iterator->second;
+			else
+				cluster.down = nullptr;
 
-			auto upIterator = sectors.find(size3_t(
+			iterator = sectors.find(sector_pos_t(
 				position.x, position.y + upDir, position.z));
-			if (upIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.up = iterator->second;
+			else
+				cluster.up = nullptr;
 
-			auto backIterator = sectors.find(size3_t(
+			iterator = sectors.find(sector_pos_t(
 				position.x, position.y, position.z + backDir));
-			if (backIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.back = iterator->second;
+			else
+				cluster.back = nullptr;
 
-			auto forwardIterator = sectors.find(size3_t(
+			iterator = sectors.find(sector_pos_t(
 				position.x, position.y, position.z + forwardDir));
-			if (forwardIterator == sectors.end())
-				return false;
+			if (iterator != sectors.end())
+				cluster.forward = iterator->second;
+			else
+				cluster.forward = nullptr;
 
-			auto cluster = Cluster(sector,
-				leftIterator->second,
-				rightIterator->second,
-				downIterator->second,
-				upIterator->second,
-				backIterator->second,
-				forwardIterator->second);
-			sector.update(registry, cluster, deltaTime);
-			return true;
+			sector->update(registry, cluster, deltaTime);
 		}
 	public:
-		terrain_pos_t position;
-
-		Terrain(const std::map<size3_t, T>& _sectors = {},
-			const terrain_pos_t& _position = terrain_pos_t()) :
-			sectors(_sectors),
-			position(_position)
+		Terrain(const terrain_pos_t& _position,
+			const std::map<sector_pos_t, std::shared_ptr<T>>& _sectors = {}) :
+			position(_position),
+			sectors(_sectors)
 		{}
 		virtual ~Terrain()
 		{}
 
-		virtual void update(const Registry& registry,
+		inline const terrain_pos_t& getPosition() const noexcept
+		{
+			return position;
+		}
+
+		inline const std::shared_ptr<T>& getSector(
+			const sector_pos_t& position) const
+		{
+			const auto iterator = sectors.find(position);
+			if (iterator == sectors.end())
+				throw std::runtime_error("Failed to find sector");
+			return iterator.second;
+		}
+		inline void addSector(
+			const std::shared_ptr<T>& sector)
+		{
+			if (!sectors.emplace(sector->getPosition(), sector).second)
+				throw std::runtime_error("Failed to add sector");
+		}
+		inline void removeSector(
+			const sector_pos_t& position)
+		{
+			if (sectors.erase(position) == 0)
+				throw std::runtime_error("Failed to remove sector");
+		}
+
+		inline const bool tryGetSector(
+			const sector_pos_t& position,
+			std::shared_ptr<T>& sector) const noexcept
+		{
+			const auto iterator = sectors.find(position);
+			if (iterator == sectors.end())
+				return false;
+			sector = iterator.second;
+			return true;
+		}
+		inline const bool tryAddSector(
+			const sector_pos_t& position,
+			const std::shared_ptr<T>& sector) noexcept
+		{
+			return sectors.emplace(position, sector).second;
+		}
+		inline const bool tryRemoveSector(
+			const sector_pos_t& position) noexcept
+		{
+			return sectors.erase(position) > 0;
+		}
+
+		virtual void update(
+			const Registry& registry,
 			const time_t deltaTime)
 		{
 			for (auto& pair : sectors)
