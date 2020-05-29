@@ -12,56 +12,6 @@ namespace VOXEL_NAMESPACE
 	protected:
 		terrain_pos_t position;
 		std::map<sector_pos_t, std::shared_ptr<T>> sectors;
-
-		inline void updateSector(const Registry& registry, const time_t deltaTime,
-			const sector_pos_t& position, const std::shared_ptr<T>& sector)
-		{
-			auto cluster = Cluster();
-
-			auto iterator = sectors.find(sector_pos_t(
-				position.x + leftDir, position.y, position.z));
-			if (iterator != sectors.end())
-				cluster.left = iterator->second;
-			else
-				cluster.left = nullptr;
-
-			iterator = sectors.find(sector_pos_t(
-				position.x + rightDir, position.y, position.z));
-			if (iterator != sectors.end())
-				cluster.right = iterator->second;
-			else
-				cluster.right = nullptr;
-
-			iterator = sectors.find(sector_pos_t(
-				position.x, position.y + downDir, position.z));
-			if (iterator != sectors.end())
-				cluster.down = iterator->second;
-			else
-				cluster.down = nullptr;
-
-			iterator = sectors.find(sector_pos_t(
-				position.x, position.y + upDir, position.z));
-			if (iterator != sectors.end())
-				cluster.up = iterator->second;
-			else
-				cluster.up = nullptr;
-
-			iterator = sectors.find(sector_pos_t(
-				position.x, position.y, position.z + backDir));
-			if (iterator != sectors.end())
-				cluster.back = iterator->second;
-			else
-				cluster.back = nullptr;
-
-			iterator = sectors.find(sector_pos_t(
-				position.x, position.y, position.z + forwardDir));
-			if (iterator != sectors.end())
-				cluster.forward = iterator->second;
-			else
-				cluster.forward = nullptr;
-
-			sector->update(registry, cluster, deltaTime);
-		}
 	public:
 		Terrain(const terrain_pos_t& _position,
 			const std::map<sector_pos_t, std::shared_ptr<T>>& _sectors = {}) :
@@ -104,7 +54,7 @@ namespace VOXEL_NAMESPACE
 			const auto iterator = sectors.find(position);
 			if (iterator == sectors.end())
 				return false;
-			sector = iterator.second;
+			sector = iterator->second;
 			return true;
 		}
 		inline const bool tryAddSector(
@@ -119,12 +69,68 @@ namespace VOXEL_NAMESPACE
 			return sectors.erase(position) > 0;
 		}
 
+		inline void removeAll() noexcept
+		{
+			sectors.clear();
+		}
+
 		virtual void update(
 			const Registry& registry,
 			const time_t deltaTime)
 		{
 			for (auto& pair : sectors)
-				updateSector(registry, deltaTime, pair.first, pair.second);
+			{
+				auto cluster = Cluster(pair.second);
+				getCluster(pair.first, cluster);
+				pair.second->update(registry, cluster, deltaTime);
+			}
+		}
+
+		inline void getCluster(
+			const sector_pos_t& position,
+			Cluster& cluster) const noexcept
+		{
+			auto iterator = sectors.find(sector_pos_t(
+				position.x + leftDir, position.y, position.z));
+			if (iterator != sectors.end())
+				cluster.left = iterator->second;
+			else
+				cluster.left = nullptr;
+
+			iterator = sectors.find(sector_pos_t(
+				position.x + rightDir, position.y, position.z));
+			if (iterator != sectors.end())
+				cluster.right = iterator->second;
+			else
+				cluster.right = nullptr;
+
+			iterator = sectors.find(sector_pos_t(
+				position.x, position.y + downDir, position.z));
+			if (iterator != sectors.end())
+				cluster.down = iterator->second;
+			else
+				cluster.down = nullptr;
+
+			iterator = sectors.find(sector_pos_t(
+				position.x, position.y + upDir, position.z));
+			if (iterator != sectors.end())
+				cluster.up = iterator->second;
+			else
+				cluster.up = nullptr;
+
+			iterator = sectors.find(sector_pos_t(
+				position.x, position.y, position.z + backDir));
+			if (iterator != sectors.end())
+				cluster.back = iterator->second;
+			else
+				cluster.back = nullptr;
+
+			iterator = sectors.find(sector_pos_t(
+				position.x, position.y, position.z + forwardDir));
+			if (iterator != sectors.end())
+				cluster.forward = iterator->second;
+			else
+				cluster.forward = nullptr;
 		}
 	};
 }

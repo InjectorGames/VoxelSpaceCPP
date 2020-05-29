@@ -12,11 +12,51 @@ namespace VOXEL_NAMESPACE
 	{
 	protected:
 		structure_pos_t position;
-
-		inline void updateSector(const Registry& registry, const time_t deltaTime,
-			const Vec3<size_t>& position, const std::shared_ptr<T>& sector)
+		// TODO: rotation
+	public:
+		Structure(const Vec3<size_t>& size,
+			const structure_pos_t& _position) :
+			Array3<std::shared_ptr<T>>(size, nullptr),
+			position(_position)
 		{
-			auto cluster = Cluster();
+			for (size_t z = 0; z < size.z; z++)
+			{
+				for (size_t y = 0; y < size.y; y++)
+				{
+					for (size_t x = 0; x < size.x; x++)
+					{
+						const auto position = sector_pos_t(x, y, z);
+						set(x, y, z, std::make_shared<Sector>(position));
+					}
+				}
+			}
+		}
+		virtual ~Structure()
+		{}
+
+		inline const structure_pos_t& getPosition() const noexcept
+		{
+			return position;
+		}
+
+		virtual void update(
+			const Registry& registry,
+			const time_t deltaTime)
+		{
+			for (size_t i = 0; i < count; i++)
+			{
+				const auto sector = get(i);
+				const auto position = indexToPosition<sectorLength, sectorLegth>(i);
+				auto cluster = Cluster(sector);
+				getCluster(position, sector);
+				sector->update(registry, cluster, deltaTime);
+			}
+		}
+
+		inline void getCluster(
+			const Vec3<size_t>& position,
+			Cluster& cluster) const noexcept
+		{
 			size_t index;
 
 			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
@@ -54,43 +94,6 @@ namespace VOXEL_NAMESPACE
 				cluster.forward = get(index);
 			else
 				cluster.forward = nullptr;
-
-			sector->update(registry, cluster, deltaTime);
-		}
-	public:
-		Structure(const Vec3<size_t>& size,
-			const structure_pos_t& _position) :
-			Array3<std::shared_ptr<T>>(size, nullptr),
-			position(_position)
-		{
-			for (size_t z = 0; z < size.z; z++)
-			{
-				for (size_t y = 0; y < size.y; y++)
-				{
-					for (size_t x = 0; x < size.x; x++)
-					{
-						const auto position = sector_pos_t(x, y, z);
-						set(x, y, z, std::make_shared<Sector>(position));
-					}
-				}
-			}
-		}
-		virtual ~Structure()
-		{}
-
-		inline const structure_pos_t& getPosition() const noexcept
-		{
-			return position;
-		}
-
-		virtual void update(const Registry& registry,
-			const time_t deltaTime)
-		{
-			for (size_t i = 0; i < count; i++)
-			{
-				const auto position = indexToPosition<sectorLength, sectorLegth>(i);
-				updateSector(registry, deltaTime, position, get(i));
-			}
 		}
 	};
 }

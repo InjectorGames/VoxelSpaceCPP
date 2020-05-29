@@ -78,7 +78,7 @@ namespace voxel
 	constexpr md_t nullVoxelMD = 0;
 
 #if !defined(VOXEL_SECTOR_LENGTH)
-	constexpr size_t sectorLength = 10;
+	constexpr size_t sectorLength = 16;
 #else
 	constexpr size_t sectorLength = VOXEL_SECTOR_LENGTH;
 #endif

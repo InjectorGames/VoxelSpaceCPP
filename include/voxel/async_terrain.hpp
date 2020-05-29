@@ -14,7 +14,7 @@ namespace VOXEL_NAMESPACE
 		std::mutex updateMutex;
 		std::thread updateThread;
 
-		inline void update(const Registry& registry)
+		inline void handleUpdate(const Registry& registry)
 		{
 			std::chrono::steady_clock::time_point lastTime;
 
@@ -26,12 +26,12 @@ namespace VOXEL_NAMESPACE
 				auto deltaTime = std::chrono::duration_cast<
 					std::chrono::duration<time_t>>(time - lastTime);
 				lastTime = time;
-				Terrain<T>::update(registry, deltaTime.count());
+				update(registry, deltaTime.count());
+
+				updateMutex.unlock();
 
 				if(sleepDelay > 0)
 					std::this_thread::sleep_for(std::chrono::milliseconds(sleepDelay));
-
-				updateMutex.unlock();
 			}
 		}
 	public:
@@ -69,7 +69,7 @@ namespace VOXEL_NAMESPACE
 				throw std::runtime_error("Thread is already running");
 
 			isRunning = true;
-			updateThread = std::thread(&AsyncTerrain<T>::update, this, registry);
+			updateThread = std::thread(&AsyncTerrain<T>::handleUpdate, this, registry);
 		}
 		inline void stopUpdate()
 		{

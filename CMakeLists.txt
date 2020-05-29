@@ -14,6 +14,8 @@ include(GNUInstallDirs)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+add_subdirectory(3rdparty/FastNoise)
+
 set(FN_SET_c0rp3n_CXX_FLAGS OFF CACHE BOOL "")
 set(FN_COMPILE_SSE2 ON CACHE BOOL "")
 set(FN_COMPILE_SSE41 ON CACHE BOOL "")
@@ -25,6 +27,7 @@ add_subdirectory(3rdparty/FastNoiseSIMD)
 
 add_library(voxel INTERFACE)
 target_link_libraries(voxel INTERFACE
+    FastNoise
     FastNoiseSIMD
 )
 target_include_directories(voxel INTERFACE
