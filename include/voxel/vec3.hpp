@@ -58,4 +58,13 @@ namespace VOXEL_NAMESPACE
 			return x != other.x && y != other.y && z != other.z;
 		}
 	};
+
+	template<class T, class R = float>
+	inline static R distance(const Vec3<T>& a, const Vec3<T>& b) noexcept
+	{
+		return std::sqrt(static_cast<R>(
+			(b.x - a.x) * (b.x - a.x) +
+			(b.y - a.y) * (b.y - a.y) +
+			(b.z - a.z) * (b.z - a.z)));
+	}
 }

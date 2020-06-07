@@ -32,7 +32,8 @@ namespace VOXEL_NAMESPACE
 			fastNoise->SetSeed(seed);
 		}
 
-		inline void generateRandom(Array3<id_t>& ids,
+		inline void generateRandom(
+			Array3<id_t>& ids,
 			const id_t id,
 			const int32_t chance = 50) const
 		{

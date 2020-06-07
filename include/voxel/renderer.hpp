@@ -10,7 +10,10 @@ namespace VOXEL_NAMESPACE
 	class Renderer
 	{
 	public:
-		virtual void generate(const Registry& registry, const Cluster& cluster,
-			 const Vec3<size_t>& position, Mesh& mesh) = 0;
+		virtual void generate(
+			const Registry& registry,
+			const Cluster& cluster,
+			const Vec3<size_t>& position,
+			Mesh& mesh) = 0;
 	};
 }

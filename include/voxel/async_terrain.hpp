@@ -22,8 +22,8 @@ namespace VOXEL_NAMESPACE
 			{
 				updateMutex.lock();
 
-				auto time = std::chrono::high_resolution_clock::now();
-				auto deltaTime = std::chrono::duration_cast<
+				const auto time = std::chrono::high_resolution_clock::now();
+				const auto deltaTime = std::chrono::duration_cast<
 					std::chrono::duration<time_t>>(time - lastTime);
 				lastTime = time;
 				update(registry, deltaTime.count());

@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 #if !defined(VOXEL_NAMESPACE)
 #define VOXEL_NAMESPACE voxel
@@ -46,9 +47,17 @@ namespace VOXEL_NAMESPACE
 		{
 			return x == other.x && y == other.y;
 		}
-		inline const bool operator!=(const Vec2<T>& other)  const noexcept
+		inline const bool operator!=(const Vec2<T>& other) const noexcept
 		{
 			return x != other.x && y != other.y;
 		}
 	};
+
+	template<class T, class R = float >
+	inline static R distance(const Vec2<T>& a, const Vec2<T>& b) noexcept
+	{
+		return std::sqrt(static_cast<R>(
+			(b.x - a.x) * (b.x - a.x) +
+			(b.y - a.y) * (b.y - a.y)));
+	}
 }

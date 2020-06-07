@@ -7,7 +7,9 @@ namespace VOXEL_NAMESPACE
 	{
 	protected:
 		inline static void generateLeft(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -63,7 +65,9 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 		inline static void generateRight(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -119,7 +123,9 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 		inline static void generateDown(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -175,7 +181,9 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 		inline static void generateUp(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -231,7 +239,9 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 		inline static void generateBack(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -287,7 +297,9 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 		inline static void generateForward(
-			const Vec3<size_t>& position, const size_t vertexIndex, Mesh& mesh)
+			const Vec3<size_t>& position,
+			const size_t vertexIndex,
+			Mesh& mesh)
 		{
 #if defined(VOXEL_USE_MESH_NORM)
 			static const mesh_norm_t normals[]
@@ -343,22 +355,28 @@ namespace VOXEL_NAMESPACE
 			mesh.indices.insert(mesh.indices.end(), std::begin(indices), std::end(indices));
 		}
 	public:
-		void generate(const Registry& registry, const Cluster& cluster,
-			const Vec3<size_t>& position, Mesh& mesh) override
+		void generate(
+			const Registry& registry,
+			const Cluster& cluster,
+			const Vec3<size_t>& position,
+			Mesh& mesh) override
 		{
 			auto vertexIndex = mesh.vertices.size() / 3;
 
 			// TODO: check if renderer is BlockRederer type
+			// optimize nullptr side checks
 
 			if (position.x == 0)
 			{
-				if (!registry.get(cluster.left->getIDS().get(sectorSafeLength, position.y, position.z)).renderer)
+				if (!cluster.left || 
+					!registry.get(cluster.left->getIDS().get(sectorSafeLength, position.y, position.z)).renderer)
 				{
 					generateLeft(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
 
-				if (!registry.get(cluster.center->getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
 				{
 					generateRight(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -366,12 +384,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else if (position.x == sectorSafeLength)
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
+				if (!cluster.center ||
+					!registry.get(cluster.center->getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
 				{
 					generateLeft(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.right->getIDS().get(zeroDir, position.y, position.z)).renderer)
+				if (!cluster.right || 
+					!registry.get(cluster.right->getIDS().get(zeroDir, position.y, position.z)).renderer)
 				{
 					generateRight(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -379,12 +399,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
+				if (!cluster.center ||
+					!registry.get(cluster.center->getIDS().get(position.x + leftDir, position.y, position.z)).renderer)
 				{
 					generateLeft(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.center->getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
+				if (!cluster.center ||
+					!registry.get(cluster.center->getIDS().get(position.x + rightDir, position.y, position.z)).renderer)
 				{
 					generateRight(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -393,12 +415,14 @@ namespace VOXEL_NAMESPACE
 
 			if (position.y == 0)
 			{
-				if (!registry.get(cluster.down->getIDS().get(position.x, sectorSafeLength, position.z)).renderer)
+				if (!cluster.down ||
+					!registry.get(cluster.down->getIDS().get(position.x, sectorSafeLength, position.z)).renderer)
 				{
 					generateDown(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y + upDir, position.z)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y + upDir, position.z)).renderer)
 				{
 					generateUp(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -406,12 +430,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else if (position.y == sectorSafeLength)
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y + downDir, position.z)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y + downDir, position.z)).renderer)
 				{
 					generateDown(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.up->getIDS().get(position.x, zeroDir, position.z)).renderer)
+				if (!cluster.up || 
+					!registry.get(cluster.up->getIDS().get(position.x, zeroDir, position.z)).renderer)
 				{
 					generateUp(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -419,12 +445,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y + downDir, position.z)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y + downDir, position.z)).renderer)
 				{
 					generateDown(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y + upDir, position.z)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y + upDir, position.z)).renderer)
 				{
 					generateUp(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -433,12 +461,14 @@ namespace VOXEL_NAMESPACE
 
 			if (position.z == 0)
 			{
-				if (!registry.get(cluster.back->getIDS().get(position.x, position.y, sectorSafeLength)).renderer)
+				if (!cluster.back ||
+					!registry.get(cluster.back->getIDS().get(position.x, position.y, sectorSafeLength)).renderer)
 				{
 					generateBack(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
+				if (!cluster.center ||
+					!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
 				{
 					generateForward(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -446,12 +476,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else if (position.z == sectorSafeLength)
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + backDir)).renderer)
+				if (!cluster.center ||
+					!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + backDir)).renderer)
 				{
 					generateBack(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.forward->getIDS().get(position.x, position.y, zeroDir)).renderer)
+				if (!cluster.forward ||
+					!registry.get(cluster.forward->getIDS().get(position.x, position.y, zeroDir)).renderer)
 				{
 					generateForward(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
@@ -459,12 +491,14 @@ namespace VOXEL_NAMESPACE
 			}
 			else
 			{
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + backDir)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + backDir)).renderer)
 				{
 					generateBack(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;
 				}
-				if (!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
+				if (!cluster.center || 
+					!registry.get(cluster.center->getIDS().get(position.x, position.y, position.z + forwardDir)).renderer)
 				{
 					generateForward(position, vertexIndex, mesh);
 					vertexIndex += quadVertCount;

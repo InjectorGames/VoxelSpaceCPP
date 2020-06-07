@@ -26,13 +26,22 @@ namespace VOXEL_NAMESPACE
 			return position;
 		}
 
+		inline auto beginSector() noexcept
+		{
+			return sectors.begin();
+		}
+		inline auto endSector() noexcept
+		{
+			return sectors.end();
+		}
+
 		inline const std::shared_ptr<T>& getSector(
 			const sector_pos_t& position) const
 		{
 			const auto iterator = sectors.find(position);
 			if (iterator == sectors.end())
 				throw std::runtime_error("Failed to find sector");
-			return iterator.second;
+			return iterator->second;
 		}
 		inline void addSector(
 			const std::shared_ptr<T>& sector)
@@ -74,22 +83,15 @@ namespace VOXEL_NAMESPACE
 			sectors.clear();
 		}
 
-		virtual void update(
-			const Registry& registry,
-			const time_t deltaTime)
+		inline const Cluster getCluster(
+			const std::shared_ptr<T>& center) const
 		{
-			for (auto& pair : sectors)
-			{
-				auto cluster = Cluster(pair.second);
-				getCluster(pair.first, cluster);
-				pair.second->update(registry, cluster, deltaTime);
-			}
-		}
+			if (!center)
+				throw std::runtime_error("Center sector is null");
 
-		inline void getCluster(
-			const sector_pos_t& position,
-			Cluster& cluster) const noexcept
-		{
+			auto cluster = Cluster(center);
+			const auto& position = center->getPosition();
+
 			auto iterator = sectors.find(sector_pos_t(
 				position.x + leftDir, position.y, position.z));
 			if (iterator != sectors.end())
@@ -131,6 +133,19 @@ namespace VOXEL_NAMESPACE
 				cluster.forward = iterator->second;
 			else
 				cluster.forward = nullptr;
+
+			return cluster;
+		}
+
+		virtual void update(
+			const Registry& registry,
+			const time_t deltaTime)
+		{
+			for (auto& pair : sectors)
+			{
+				const auto cluster = getCluster(pair.second);
+				pair.second->update(registry, cluster, deltaTime);
+			}
 		}
 	};
 }

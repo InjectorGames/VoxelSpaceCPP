@@ -46,54 +46,59 @@ namespace VOXEL_NAMESPACE
 			for (size_t i = 0; i < count; i++)
 			{
 				const auto sector = get(i);
-				const auto position = indexToPosition<sectorLength, sectorLegth>(i);
-				auto cluster = Cluster(sector);
-				getCluster(position, sector);
+				auto cluster = getCluster(sector);
 				sector->update(registry, cluster, deltaTime);
 			}
 		}
 
-		inline void getCluster(
-			const Vec3<size_t>& position,
-			Cluster& cluster) const noexcept
+		inline const Cluster getCluster(
+			const std::shared_ptr<T>& center) const
 		{
-			size_t index;
+			if (!center)
+				throw std::runtime_error("Center sector is null");
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			auto cluster = Cluster(center);
+			const auto& position = center->getPosition();
+
+			size_t index ;
+
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x + leftDir, position.y, position.z, index))
 				cluster.left = get(index);
 			else
 				cluster.left = nullptr;
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x + rightDir, position.y, position.z, index))
 				cluster.right = get(index);
 			else
 				cluster.right = nullptr;
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x, position.y + downDir, position.z, index))
 				cluster.down = get(index);
 			else
 				cluster.down = nullptr;
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x, position.y + upDir, position.z, index))
 				cluster.up = get(index);
 			else
 				cluster.up = nullptr;
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x, position.y, position.z + backDir, index))
 				cluster.back = get(index);
 			else
 				cluster.back = nullptr;
 
-			if (positionToIndexNoex<sectorLegth, sectorLegth, sectorLegth>
+			if (positionToIndexNoex<sectorLength, sectorLength, sectorLength>
 				(position.x, position.y, position.z + forwardDir, index))
 				cluster.forward = get(index);
 			else
 				cluster.forward = nullptr;
+
+			return cluster;
 		}
 	};
 }

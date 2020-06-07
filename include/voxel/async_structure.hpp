@@ -22,8 +22,8 @@ namespace VOXEL_NAMESPACE
 			{
 				updateMutex.lock();
 
-				auto time = std::chrono::high_resolution_clock::now();
-				auto deltaTime = std::chrono::duration_cast<
+				const auto time = std::chrono::high_resolution_clock::now();
+				const auto deltaTime = std::chrono::duration_cast<
 					std::chrono::duration<time_t>>(time - lastTime);
 				lastTime = time;
 				Structure<T>::update(registry, deltaTime.count());
@@ -39,7 +39,7 @@ namespace VOXEL_NAMESPACE
 
 		AsyncStructure(const size3_t& size,
 			const structure_pos_t& position,
-			const std::shared_ptr<T>& sector = T(),
+			const std::shared_ptr<T> sector,
 			const int _sleepDelay = 1) :
 			Structure<T>(size, position, sector),
 			sleepDelay(_sleepDelay),

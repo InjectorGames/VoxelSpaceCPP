@@ -14,6 +14,13 @@ namespace VOXEL_NAMESPACE
 		Array3<md_t> mds;
 	public:
 		Sector(const sector_pos_t& _position,
+			const Array3<id_t>& _ids,
+			const Array3<md_t>& _mds) :
+			position(_position),
+			ids(_ids),
+			mds(_mds)
+		{}
+		Sector(const sector_pos_t& _position,
 			const Vec3<size_t> size = Vec3<size_t>(
 			sectorLength, sectorLength, sectorLength),
 			const id_t id = nullVoxelID,
@@ -48,8 +55,10 @@ namespace VOXEL_NAMESPACE
 			return mds;
 		}
 
-		virtual void update(const Registry& registry,
-			Cluster& cluster, const time_t deltaTime)
+		virtual void update(
+			const Registry& registry,
+			const Cluster& cluster,
+			const time_t deltaTime)
 		{
 			for (size_t i = 0; i < sectorSize; i++)
 			{
@@ -57,7 +66,8 @@ namespace VOXEL_NAMESPACE
 				const auto& voxel = registry.get(id);
 
 				if (voxel.updater)
-					voxel.updater->update(registry, deltaTime, i, cluster);
+					voxel.updater->update(
+						registry, cluster, deltaTime, i);
 			}
 		}
 	};

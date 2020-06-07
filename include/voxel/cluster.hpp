@@ -13,13 +13,13 @@ namespace VOXEL_NAMESPACE
 		std::shared_ptr<Sector> back;
 		std::shared_ptr<Sector> forward;
 
-		Cluster(const std::shared_ptr<Sector>& _center = nullptr,
-			const std::shared_ptr<Sector>& _left = nullptr,
-			const std::shared_ptr<Sector>& _right = nullptr,
-			const std::shared_ptr<Sector>& _down = nullptr,
-			const std::shared_ptr<Sector>& _up = nullptr,
-			const std::shared_ptr<Sector>& _back = nullptr,
-			const std::shared_ptr<Sector>& _forward = nullptr) :
+		Cluster(const std::shared_ptr<Sector>& _center = {},
+			const std::shared_ptr<Sector>& _left = {},
+			const std::shared_ptr<Sector>& _right = {},
+			const std::shared_ptr<Sector>& _down = {},
+			const std::shared_ptr<Sector>& _up = {},
+			const std::shared_ptr<Sector>& _back = {},
+			const std::shared_ptr<Sector>& _forward = {}) :
 			center(_center),
 			left(_left),
 			right(_right),
