@@ -43,6 +43,19 @@ namespace VOXEL_NAMESPACE
 		{
 			return size;
 		}
+		
+		inline const size_t getSizeX() const noexcept
+		{
+			return size.x;
+		}
+		inline const size_t getSizeY() const noexcept
+		{
+			return size.y;
+		}
+		inline const size_t getSizeZ() const noexcept
+		{
+			return size.z;
+		}
 
 		inline T* getData() noexcept
 		{
