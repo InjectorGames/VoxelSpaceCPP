@@ -33,13 +33,14 @@ namespace VOXEL_NAMESPACE
 				{
 					for (size_t x = 0; x < sectorLength; x++)
 					{
+						const auto position = Vec3<size_t>(x, y, z);
 						const auto& ids = cluster.center->getIDS();
-						const auto& id = ids.get(Vec3<size_t>(x, y, z));
+						const auto& id = ids.get(position);
 						const auto& voxel = registry.get(id);
 
 						if (voxel.renderer)
-							voxel.renderer->generate(
-								registry, cluster, position, vertexIndex, mesh);
+							voxel.renderer->generate(registry, cluster,
+								position, vertexIndex, mesh);
 					}
 				}
 			}
