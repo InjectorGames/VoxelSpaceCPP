@@ -17,7 +17,7 @@ namespace VOXEL_NAMESPACE
 			size_t& vertexIndex,
 			Mesh& mesh) = 0;
 
-		inline static const Mesh generate(
+		inline static const Mesh render(
 			const Registry& registry,
 			const Cluster& cluster)
 		{
