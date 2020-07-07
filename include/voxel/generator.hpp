@@ -3,6 +3,7 @@
 
 // TODO: switch to FastNoise2
 // https://github.com/Auburns/FastNoise2
+#include <FastNoise.h>
 #include <FastNoiseSIMD/FastNoiseSIMD.h>
 
 namespace VOXEL_NAMESPACE
@@ -11,25 +12,30 @@ namespace VOXEL_NAMESPACE
 	class Generator
 	{
 	protected:
-		FastNoiseSIMD* fastNoise;
+		int seed;
+		FastNoise noise;
+		FastNoiseSIMD* noiseSIMD;
 	public:
-		Generator(int seed = 1337)
-		{
-			fastNoise = FastNoiseSIMD::NewFastNoiseSIMD(seed);
-		}
+		Generator(const int _seed = 1337) :
+			seed(_seed),
+			noise(),
+			noiseSIMD(FastNoiseSIMD::NewFastNoiseSIMD(seed))
+		{}
 		virtual ~Generator()
 		{
-			delete fastNoise;
-			fastNoise = nullptr;
+			delete noiseSIMD;
+			noiseSIMD = nullptr;
 		}
 
 		inline const int getSeed() const noexcept
 		{
-			return fastNoise->GetSeed();
+			return seed;
 		}
-		inline void setSeed(const int seed) noexcept
+		inline void setSeed(const int _seed) noexcept
 		{
-			fastNoise->SetSeed(seed);
+			seed = _seed;
+			noise.SetSeed(seed);
+			noiseSIMD->SetSeed(seed);
 		}
 
 		inline void generateRandom(
@@ -40,7 +46,8 @@ namespace VOXEL_NAMESPACE
 			if (chance < 0 || chance > 100)
 				throw std::range_error("Chance out of range");
 
-			srand(static_cast<uint32_t>(fastNoise->GetSeed()));
+			// TODO: use white noise instead
+			srand(static_cast<uint32_t>(seed));
 			const auto modulo = 10000 / chance;
 
 			for (size_t i = 0; i < sectorSize; i++)

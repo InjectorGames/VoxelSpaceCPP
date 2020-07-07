@@ -15,6 +15,7 @@ namespace VOXEL_NAMESPACE
 				throw std::runtime_error("Cluster center is null");
 
 			auto mesh = Mesh();
+			size_t vertexIndex = 0;
 
 			for (size_t z = 0; z < sectorLength; z++)
 			{
@@ -22,13 +23,13 @@ namespace VOXEL_NAMESPACE
 				{
 					for (size_t x = 0; x < sectorLength; x++)
 					{
-						const auto position = Vec3<size_t>(x, y, z);
-						const auto& id = cluster.center->getIDS().get(position);
+						const auto& ids = cluster.center->getIDS();
+						const auto& id = ids.get(Vec3<size_t>(x, y, z));
 						const auto& voxel = registry.get(id);
 
 						if (voxel.renderer)
 							voxel.renderer->generate(
-								registry, cluster, position, mesh);
+								registry, cluster, position, vertexIndex, mesh);
 					}
 				}
 			}

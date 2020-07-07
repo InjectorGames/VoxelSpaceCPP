@@ -79,7 +79,8 @@ namespace VOXEL_NAMESPACE
 
 			isRunning = false;
 
-			if (updateThread.get_id() != std::this_thread::get_id() && updateThread.joinable())
+			if (updateThread.get_id() != std::this_thread::get_id() &&
+				updateThread.joinable())
 				updateThread.join();
 		}
 	};

@@ -29,14 +29,6 @@ namespace voxel
 	using mesh_ind_t = uint8_t;
 #endif
 
-#if defined (VOXEL_USE_MESH_NORM)
-#	if defined(VOXEL_MESH_NORM_TYPE)
-	using mesh_norm_t = VOXEL_MESH_NORM_TYPE;
-#	else
-	using mesh_norm_t = float;
-#	endif
-#endif
-
 #if defined(VOXEL_TIME_TYPE)
 	using time_t = VOXEL_TIME_TYPE;
 #else
@@ -58,7 +50,7 @@ namespace voxel
 #if defined(VOXEL_TERRAIN_POS_TYPE)
 	using terrain_pos_t = VOXEL_TERRAIN_POS_TYPE;
 #else
-	using terrain_pos_t = Vec2<uint8_t>;
+	using terrain_pos_t = uint8_t;
 #endif
 
 	constexpr auto zeroDir = 0;

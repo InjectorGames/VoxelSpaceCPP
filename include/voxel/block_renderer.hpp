@@ -11,28 +11,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(leftDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(leftDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(leftDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(leftDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x),
@@ -52,6 +30,28 @@ namespace VOXEL_NAMESPACE
 				static_cast<mesh_vert_t>(position.z),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(leftDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(leftDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(leftDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(leftDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
 
 			const mesh_ind_t indices[]
 			{
@@ -69,28 +69,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(rightDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(rightDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(rightDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(rightDir),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x + 1),
@@ -110,6 +88,28 @@ namespace VOXEL_NAMESPACE
 				static_cast<mesh_vert_t>(position.z),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(rightDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(rightDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(rightDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(rightDir),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
 
 			const mesh_ind_t indices[]
 			{
@@ -127,28 +127,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(downDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(downDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(downDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(downDir),
-				static_cast<mesh_norm_t>(0),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x),
@@ -168,6 +146,28 @@ namespace VOXEL_NAMESPACE
 				static_cast<mesh_vert_t>(position.z + 1),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(downDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(downDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(downDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(downDir),
+				static_cast<mesh_vert_t>(0),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
 
 			const mesh_ind_t indices[]
 			{
@@ -185,28 +185,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(upDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(upDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(upDir),
-				static_cast<mesh_norm_t>(0),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(upDir),
-				static_cast<mesh_norm_t>(0),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x),
@@ -226,6 +204,28 @@ namespace VOXEL_NAMESPACE
 				static_cast<mesh_vert_t>(position.z),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(upDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(upDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(upDir),
+				static_cast<mesh_vert_t>(0),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(upDir),
+				static_cast<mesh_vert_t>(0),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
 
 			const mesh_ind_t indices[]
 			{
@@ -243,28 +243,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(backDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(backDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(backDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(backDir),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x),
@@ -284,6 +262,28 @@ namespace VOXEL_NAMESPACE
 				static_cast<mesh_vert_t>(position.z),
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
+
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(backDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(backDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(backDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(backDir),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
 
 			const mesh_ind_t indices[]
 			{
@@ -301,28 +301,6 @@ namespace VOXEL_NAMESPACE
 			const size_t vertexIndex,
 			Mesh& mesh)
 		{
-#if defined(VOXEL_USE_MESH_NORM)
-			static const mesh_norm_t normals[]
-			{
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(forwardDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(forwardDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(forwardDir),
-
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(0),
-				static_cast<mesh_norm_t>(forwardDir),
-			};
-			mesh.normals.insert(mesh.normals.end(), std::begin(normals), std::end(normals));
-#endif
-
 			const mesh_vert_t vertices[]
 			{
 				static_cast<mesh_vert_t>(position.x + 1),
@@ -343,6 +321,28 @@ namespace VOXEL_NAMESPACE
 			};
 			mesh.vertices.insert(mesh.vertices.end(), std::begin(vertices), std::end(vertices));
 
+#if defined(VOXEL_USE_MESH_NORM)
+			static const mesh_vert_t normals[]
+			{
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(forwardDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(forwardDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(forwardDir),
+
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(0),
+				static_cast<mesh_vert_t>(forwardDir),
+			};
+			mesh.vertices.insert(mesh.vertices.end(), std::begin(normals), std::end(normals));
+#endif
+
 			const mesh_ind_t indices[]
 			{
 				static_cast<mesh_ind_t>(vertexIndex),
@@ -359,10 +359,9 @@ namespace VOXEL_NAMESPACE
 			const Registry& registry,
 			const Cluster& cluster,
 			const Vec3<size_t>& position,
+			size_t& vertexIndex,
 			Mesh& mesh) override
 		{
-			auto vertexIndex = mesh.vertices.size() / 3;
-
 			// TODO: check if renderer is BlockRederer type
 			// optimize nullptr side checks
 

@@ -14,6 +14,7 @@ namespace VOXEL_NAMESPACE
 			const Registry& registry,
 			const Cluster& cluster,
 			const Vec3<size_t>& position,
+			size_t& vertexIndex,
 			Mesh& mesh) = 0;
 	};
 }
